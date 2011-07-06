@@ -1,0 +1,39 @@
+less()
+{
+  local params=() param parsed
+  for param in "$@"
+  do
+    case $param in
+    (*:*)
+      parsed=( ${param//:/ } )
+      params+=( "-N" "+j${parsed[1]}" "${parsed[0]}" )
+      ;;
+    (*)
+      params+=( "$param" )
+      ;;
+    esac
+  done
+  command less "${params[@]}"
+}
+
+get()
+{
+  local count=$1 url=${2:-} file=${3:-}
+  if [[ -z "$count" ]]
+  then
+    echo "Usage: $0 [count] url [target]"
+    return 1
+  fi
+  if [[ -z "$url" ]]
+  then
+    url="$count"
+    count=4
+  fi
+  if [[ -z "$file" ]]
+  then
+    file="$(basename "$url")"
+    file="${file%%&*}"
+  fi
+  echo "Save $url to $file in $count threads."
+  aria2c -c -x $count -j $count -s $count $url -o $file
+}
