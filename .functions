@@ -37,3 +37,9 @@ get()
   echo "Save $url to $file in $count threads."
   aria2c -c -x $count -j $count -s $count $url -o $file
 }
+
+d()
+{
+  [[ -d $1 ]] || mkdir -p $1
+  cd $1
+}
