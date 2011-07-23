@@ -11,14 +11,10 @@
 # ridden in every subshell.
 
 export EDITOR=/usr/bin/mcedit
-
-test -s ~/.alias && . ~/.alias || true
-test -s ~/.functions && . ~/.functions || true
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
-[[ -s "$HOME/.rvm/scripts/completion" ]] && source "$HOME/.rvm/scripts/completion"
-
 export USE_BUNDLER=try
+
+for script in ~/.alias ~/.functions ~/.rvm/scripts/{rvm,completion}
+do source $script || true ; done
 
 shopt -s promptvars dotglob histappend no_empty_cmd_completion cdspell xpg_echo
 
