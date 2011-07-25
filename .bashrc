@@ -18,18 +18,32 @@ do source $script || true ; done
 
 shopt -s promptvars dotglob histappend no_empty_cmd_completion cdspell xpg_echo
 
+show_git() {
+  local limit=$(git config dir.limit) path=$PWD top=$(git rev-parse --show-toplevel)
+  [[ -z "$limit" ]] && return 0
+  while (( limit >= 0 ))
+  do
+    case "$path" in
+      $top) return 0 ;;
+      /|$HOME) return 1 ;;
+    esac
+    path=$(cd $path/.. ; pwd)
+    : $(( --limit ))
+  done
+  return 1
+}
 function pgd {
-  echo -n $(
+  show_git && echo -n $(
     git status 2>/dev/null | awk -v out=$1 -v std="dirty" '{ if ($0=="# Changes to be committed:") std = "uncommited"; last=$0 } \
       END{ if(last!="" && last!="nothing to commit (working directory clean)") { if(out!="") print out; else print std } }'
   )
 }
 function pgb {
-  echo -n "$(git branch --no-color 2>/dev/null | awk -v out="$1"\
+  show_git && echo -n "$(git branch --no-color 2>/dev/null | awk -v out="$1"\
    '/^*/ { if(out=="") print $2; else print out}')" #'
 }
 function pgr {
-  echo -n "$(git status 2>/dev/null | awk -v out="$1" '/# Your branch is / { if(out=="") print $5; else print out }')" #'
+  show_git && echo -n "$(git status 2>/dev/null | awk -v out="$1" '/# Your branch is / { if(out=="") print $5; else print out }')" #'
 }
 function _rvm_curr {
   local rvm=$(rvm current)
