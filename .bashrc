@@ -27,7 +27,7 @@ show_git() {
       $top) return 0 ;;
       /|$HOME) return 1 ;;
     esac
-    path=$(cd $path/.. ; pwd)
+    path=$(dirname $path)
     : $(( --limit ))
   done
   return 1
