@@ -43,3 +43,7 @@ d()
   [[ -d $1 ]] || mkdir -p $1
   cd $1
 }
+gwm()
+{
+  git $1 wayne master
+}
