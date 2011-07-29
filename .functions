@@ -47,3 +47,12 @@ gwm()
 {
   git $1 wayne master
 }
+gcam()
+{
+  git add .
+  git commit -m "$*"
+}
+gcm()
+{
+  git commit -m "$*"
+}
