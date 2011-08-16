@@ -45,7 +45,11 @@ d()
 }
 gwm()
 {
-  git $1 wayne master
+  git $@ wayne master
+}
+gwmpush()
+{
+  gwm pull $@ && gwm push && git push
 }
 gcam()
 {
