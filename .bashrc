@@ -13,7 +13,7 @@
 export EDITOR=/usr/bin/mcedit
 export USE_BUNDLER=try
 
-for script in ~/.alias ~/.functions ~/.rvm/scripts/{rvm,completion}
+for script in ~/.alias ~/.functions ~/.rvm/scripts/{rvm,completion} ~/.profile
 do source $script || true ; done
 
 shopt -s promptvars dotglob histappend no_empty_cmd_completion cdspell xpg_echo
