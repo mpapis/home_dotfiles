@@ -9,3 +9,7 @@
 !\.mplayer/skins
 !\.mplayer/skins/XFce4
 !\.mplayer/skins/XFce4/*
+!\.local
+!\.local/share
+!\.local/share/radiotray
+!\.local/share/radiotray/bookmarks.xml
