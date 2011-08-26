@@ -19,7 +19,7 @@ do source $script || true ; done
 shopt -s promptvars dotglob histappend no_empty_cmd_completion cdspell xpg_echo
 
 show_git() {
-  local limit=$(git config dir.limit) path=$PWD top=$(git rev-parse --show-toplevel)
+  local limit=$(git config dir.limit 2>/dev/null) path=$PWD top=$(git rev-parse --show-toplevel 2>/dev/null)
   [[ -z "$limit" ]] && return 0
   while (( limit >= 0 ))
   do
