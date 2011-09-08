@@ -12,6 +12,7 @@
 
 export EDITOR=/usr/bin/mcedit
 export USE_BUNDLER=try
+export sm_local_path=/home/mpapis/projects/opensource/sm
 
 for script in ~/.alias ~/.functions ~/.rvm/scripts/{rvm,completion} ~/.profile
 do source $script || true ; done
