@@ -10,9 +10,12 @@
 # here, since multilingual X sessions would not work properly if LANG is over-
 # ridden in every subshell.
 
+export PATH=$PATH:/usr/sbin:/sbin
 export EDITOR=/usr/bin/mcedit
 export USE_BUNDLER=try
-export sm_local_path=/home/mpapis/projects/opensource/sm
+
+export sm_local_path=~/projects/opensource/sm
+export rvm_local_path=~/projects/opensource/rvm
 
 for script in ~/.alias ~/.functions ~/.rvm/scripts/{rvm,completion} ~/.profile
 do source $script || true ; done
