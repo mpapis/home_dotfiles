@@ -1,5 +1,7 @@
 *
 !\.bashrc
+!\.zshrc
+!\.shrc
 !\.alias
 !\.functions
 !\.gemrc

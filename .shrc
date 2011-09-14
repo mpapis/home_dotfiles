@@ -1,0 +1,55 @@
+# Sample .bashrc for SuSE Linux
+# Copyright (c) SuSE GmbH Nuernberg
+
+# There are 3 different types of shells in bash: the login shell, normal shell
+# and interactive shell. Login shells read ~/.profile and interactive shells
+# read ~/.bashrc; in our setup, /etc/profile sources ~/.bashrc - thus all
+# settings made here will also take effect in a login shell.
+#
+# NOTE: It is recommended to make language settings in ~/.profile rather than
+# here, since multilingual X sessions would not work properly if LANG is over-
+# ridden in every subshell.
+
+export PATH=$PATH:/usr/sbin:/sbin
+export EDITOR=/usr/bin/mcedit
+export USE_BUNDLER=try
+
+export sm_local_path=~/projects/opensource/sm
+export rvm_local_path=~/projects/opensource/rvm
+
+for script in ~/.alias ~/.functions ~/.rvm/scripts/{rvm,completion} ~/.profile
+do source $script || true ; done
+
+show_git() {
+  local limit path
+  limit=$(git config dir.limit 2>/dev/null) 
+  path=$PWD top=$(git rev-parse --show-toplevel 2>/dev/null)
+  [[ -z "$limit" ]] && return 0
+  while (( limit >= 0 ))
+  do
+    case "$path" in
+      $top) return 0 ;;
+      /|$HOME) return 1 ;;
+    esac
+    path=$(dirname $path)
+    : $(( --limit ))
+  done
+  return 1
+}
+function pgd {
+  show_git && echo -n $(
+    git status 2>/dev/null | awk -v out=$1 -v std="dirty" '{ if ($0=="# Changes to be committed:") std = "uncommited"; last=$0 } \
+      END{ if(last!="" && last!="nothing to commit (working directory clean)") { if(out!="") print out; else print std } }'
+  )
+}
+function pgb {
+  show_git && echo -n "$(git branch --no-color 2>/dev/null | awk -v out="$1"\
+   '/^*/ { if(out=="") print $2; else print out}')" #'
+}
+function pgr {
+  show_git && echo -n "$(git status 2>/dev/null | awk -v out="$1" '/# Your branch is / { if(out=="") print $5; else print out }')" #'
+}
+function _rvm_curr {
+  local rvm=$(rvm current)
+  [[ -n "${rvm}" ]] && printf "${rvm##ruby-} "
+}
