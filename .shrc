@@ -21,17 +21,18 @@ for script in ~/.alias ~/.functions ~/.rvm/scripts/{rvm,completion} ~/.profile
 do source $script || true ; done
 
 show_git() {
-  local limit path
+  local limit path top
   limit=$(git config dir.limit 2>/dev/null) 
-  path=$PWD top=$(git rev-parse --show-toplevel 2>/dev/null)
+  path="$PWD"
+  top=$(git rev-parse --show-toplevel 2>/dev/null)
   [[ -z "$limit" ]] && return 0
   while (( limit >= 0 ))
   do
     case "$path" in
-      $top) return 0 ;;
-      /|$HOME) return 1 ;;
+      ($top) return 0 ;;
+      (/|$HOME) return 1 ;;
     esac
-    path=$(dirname $path)
+    path="$( dirname "$path" )"
     : $(( --limit ))
   done
   return 1
