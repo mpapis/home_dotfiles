@@ -14,9 +14,6 @@ export PATH=$PATH:/usr/sbin:/sbin
 export EDITOR=/usr/bin/mcedit
 export USE_BUNDLER=try
 
-export sm_local_path=~/projects/opensource/sm
-export rvm_local_path=~/projects/opensource/rvm
-
 for script in ~/.alias ~/.functions ~/.rvm/scripts/{rvm,completion} ~/.profile
 do source $script || true ; done
 
