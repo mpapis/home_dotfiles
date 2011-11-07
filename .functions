@@ -49,7 +49,7 @@ gwm()
 }
 gwmpush()
 {
-  gwm pull $@ && gwm push && git push
+  gwm pull $@ && git pull $@ && gwm push && git push
 }
 gcam()
 {
