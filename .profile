@@ -11,3 +11,5 @@ if [ -x /usr/bin/fortune ] ; then
     /usr/bin/fortune
     echo
 fi
+
+__setup_ssh_agent

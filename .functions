@@ -60,3 +60,29 @@ gcm()
 {
   git commit -m "$*"
 }
+__setup_ssh_agent()
+{
+  # skip if already loaded
+  if [[ -n "$SSH_AGENT_PID" ]] && ps -p $SSH_AGENT_PID | grep ssh-agent >/dev/null
+  then return 0
+  fi
+
+  local agent_file
+  agent_file=~/.ssh-agent-config
+
+  if [[ -f $agent_file ]]
+  then source $agent_file >/dev/null
+  fi
+
+  if [[ -n "$SSH_AGENT_PID" ]] && ps -p $SSH_AGENT_PID | grep ssh-agent >/dev/null
+  then return 0
+  fi
+
+  ssh-agent > $agent_file
+  source $agent_file >/dev/null
+
+  if [[ -t 0 ]] && ! ssh-add -l | grep $HOME/.ssh/id_rsa >/dev/null
+  then
+    ssh-add
+  fi
+}
