@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 less()
 {
   local params=() param parsed
@@ -119,4 +121,12 @@ __setup_ssh_agent()
   then
     ssh-add
   fi
+}
+__backtrace()
+{
+  local counter
+  counter=0
+  while caller $counter
+  do : $(( counter+=1 ))
+  done
 }
