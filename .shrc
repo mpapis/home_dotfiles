@@ -11,7 +11,13 @@
 # ridden in every subshell.
 
 export PATH=$PATH:/usr/sbin:/sbin
-export EDITOR=/usr/bin/mcedit
+export EDITOR
+if which mcedit >/dev/null
+then
+  EDITOR=mcedit
+else
+  EDITOR=vim
+fi
 export USE_BUNDLER=try
 
 for script in ~/.alias ~/.functions ~/.rvm/scripts/{rvm,completion} ~/.profile

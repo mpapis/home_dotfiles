@@ -53,6 +53,10 @@ gwmpush()
 {
   gwm pull $@ && git pull $@ && gwm push && git push
 }
+gpp()
+{
+  git pull $@ && git push
+}
 gcam()
 {
   git add .
@@ -130,3 +134,11 @@ __backtrace()
   do : $(( counter+=1 ))
   done
 }
+if ! which mcedit >/dev/null
+then
+  mcedit()
+  {
+    vim "$@"
+  }
+fi
+
