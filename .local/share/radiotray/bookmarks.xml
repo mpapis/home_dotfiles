@@ -220,5 +220,9 @@
 	<bookmark name="Latino" url="http://www.polskastacja.pl/play/aac_latino.pls"/>
 	<bookmark name="EDEN (New Age &amp; World Music)" url="http://www.polskastacja.pl/play/aac_eden.pls"/>
     </group>
+    <group name="di.fm">
+	<bookmark name="Hard Dance" url="http://listen.di.fm/public3/harddance.pls"/>
+	<bookmark name="Trance" url="http://www.di.fm/mp3/trance128k.pls"/>
+    </group>
 </group>
 </bookmarks>
