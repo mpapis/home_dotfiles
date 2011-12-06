@@ -7,6 +7,7 @@
 !\.gemrc
 !\.gitignore
 !\.profile
+!\.vimrc
 !\.mplayer
 !\.mplayer/skins
 !\.mplayer/skins/XFce4
