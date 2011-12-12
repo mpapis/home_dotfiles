@@ -1,0 +1,10 @@
+[user]
+	name = Michal Papis
+	email = mpapis@gmail.com
+[dir]
+[color]
+	ui = auto
+[core]
+	pager = less -RS
+[alias]
+	sync = !sh -c \"git push wayne master && git push origin master && git checkout stable && git push wayne stable && git push origin stable && git checkout master\"

@@ -5,6 +5,7 @@
 !\.alias
 !\.functions
 !\.gemrc
+!\.gitconfig
 !\.gitignore
 !\.profile
 !\.vimrc
