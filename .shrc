@@ -21,4 +21,4 @@ fi
 export USE_BUNDLER=try
 
 for script in ~/.rvm/scripts/{rvm,completion} ~/.alias ~/.functions ~/.profile
-do source $script || true ; done
+do [[ -s $script ]] && source $script || true ; done
