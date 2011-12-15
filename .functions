@@ -141,4 +141,11 @@ then
     vim "$@"
   }
 fi
+if ! command -v rvm >/dev/null 2>&1
+then
+  rvm()
+  {
+    echo "no rvm"
+  }
+fi
 
