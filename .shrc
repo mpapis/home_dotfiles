@@ -20,5 +20,5 @@ else
 fi
 export USE_BUNDLER=try
 
-for script in ~/.alias ~/.functions ~/.rvm/scripts/{rvm,completion} ~/.profile
+for script in ~/.rvm/scripts/{rvm,completion} ~/.alias ~/.functions ~/.profile
 do source $script || true ; done
