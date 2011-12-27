@@ -40,6 +40,14 @@ get()
   aria2c -c -x $count -j $count -s $count $url -o $file
 }
 
+if ! which wget > /dev/null 2>&1
+then
+  wget()
+  {
+    curl $1 -o $(basename $1)
+  }
+fi
+
 d()
 {
   [[ -d $1 ]] || mkdir -p $1
