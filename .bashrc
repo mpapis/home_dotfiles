@@ -20,3 +20,7 @@ if false
 then #already loaded in ~/.shrc
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 fi
+
+type cd
+[[ -r "$HOME/.smartcd_config" ]] && source ~/.smartcd_config
+type cd

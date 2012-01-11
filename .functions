@@ -2,7 +2,8 @@
 
 less()
 {
-  local params=() param parsed
+  typeset param parsed
+  typeset -a params
   for param in "$@"
   do
     case $param in
@@ -20,7 +21,10 @@ less()
 
 get()
 {
-  local count=$1 url=${2:-} file=${3:-}
+  typeset count url file
+  count=$1
+  url=$2
+  file=$3
   if [[ -z "$count" ]]
   then
     echo "Usage: $0 [count] url [target]"
@@ -67,7 +71,7 @@ gcm()
   git commit -m "$*"
 }
 show_git() {
-  local limit path top
+  typeset limit path top
   limit=$(git config dir.limit 2>/dev/null)
   path="$PWD"
   top=$(git rev-parse --show-toplevel 2>/dev/null)
@@ -97,7 +101,8 @@ function pgr {
   show_git && echo -n "$(git status 2>/dev/null | awk -v out="$1" '/# Your branch is / { if(out=="") print $5; else print out }')" #'
 }
 function _rvm_curr {
-  local rvm=$(rvm current)
+  typeset rvm
+  rvm=$(rvm current)
   [[ -n "${rvm}" ]] && printf "${rvm##ruby-} "
 }
 __setup_ssh_agent()
@@ -107,7 +112,7 @@ __setup_ssh_agent()
   then return 0
   fi
 
-  local agent_file
+  typeset agent_file
   agent_file=~/.ssh-agent-config
 
   if [[ -f $agent_file ]]
@@ -128,7 +133,7 @@ __setup_ssh_agent()
 }
 __backtrace()
 {
-  local counter
+  typeset counter
   counter=0
   while caller $counter
   do : $(( counter+=1 ))
