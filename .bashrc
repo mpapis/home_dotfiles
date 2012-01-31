@@ -15,12 +15,3 @@ shopt -s promptvars dotglob histappend no_empty_cmd_completion cdspell xpg_echo
 source ~/.shrc
 
 export PS1='($?) \[\033[36m\]$(_rvm_curr)\[\033[0m\]\u@\h:\[\033[33m\]\w\[\033[0m\]$(pgb " ")\[\033[36m\]$(pgb )\[\033[0m\]$(pgr "(")\[\033[35m\]$(pgr )\[\033[0m\]$(pgr ")")\[\033[0m\]$(pgd "[")\[\033[31m\]$(pgd)\[\033[0m\]$(pgd "]")\[\033[1;33m\]>\[\033[0m\]'
-
-if false
-then #already loaded in ~/.shrc
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-fi
-
-type cd
-[[ -r "$HOME/.smartcd_config" ]] && source ~/.smartcd_config
-type cd
