@@ -1,4 +1,6 @@
 *
+!\.bash_profile
+!\.zlogin
 !\.bashrc
 !\.zshrc
 !\.shrc
