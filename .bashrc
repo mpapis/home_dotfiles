@@ -16,5 +16,6 @@ source ~/.shrc
 
 export PS1='($?) \[\033[36m\]$(_rvm_curr)\[\033[0m\]\u@\h:\[\033[33m\]\w\[\033[0m\]$(pgb " ")\[\033[36m\]$(pgb )\[\033[0m\]$(pgr "(")\[\033[35m\]$(pgr )\[\033[0m\]$(pgr ")")\[\033[0m\]$(pgd "[")\[\033[31m\]$(pgd)\[\033[0m\]$(pgd "]")\[\033[1;33m\]>\[\033[0m\]'
 
-BUNDLER_BLACKLIST=gist
+export BUNDLER_BLACKLIST="gist rake"
 
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
