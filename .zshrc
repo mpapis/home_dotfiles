@@ -17,4 +17,5 @@ source ~/.shrc
 setopt prompt_subst
 export PS1='(%?) %F{cyan}$(_rvm_curr)%F{default}%n@%m:%F{yellow}%d%F{default}$(pgb " ")%F{cyan}$(pgb )%F{default}$(pgr "(")%F{blue}$(pgr )%F{default}$(pgr ")")$(pgd "[")%F{red}$(pgd)%F{default}$(pgd "]")%F{yellow}>%F{default}'
 
+
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
