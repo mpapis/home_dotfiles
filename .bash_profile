@@ -1,5 +1,7 @@
 export projects_path="$HOME/projects"
 
+[[ -s "$HOME/.bashrc" ]] && source "$HOME/.bashrc" || true
+
 [[ -s "/opt/sm/core/sm/shell/project/interactive" ]] && source "/opt/sm/core/sm/shell/project/interactive"
 
 
