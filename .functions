@@ -8,8 +8,13 @@ less()
   do
     case $param in
     (*:*)
-      parsed=( ${param//:/ } )
-      params+=( "-N" "+j${parsed[1]}" "${parsed[0]}" )
+      if [[ -f "$param" ]]
+      then
+        params+=( "$param" )
+      else
+        parsed=( ${param//:/ } )
+        params+=( "-N" "+j${parsed[1]}" "${parsed[0]}" )
+      fi
       ;;
     (*)
       params+=( "$param" )
