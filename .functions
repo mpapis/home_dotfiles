@@ -83,6 +83,39 @@ gcm()
 {
   git commit -m "$*"
 }
+gf()
+{
+  typeset command subcommand version
+  command=$1
+  subcommand=$2
+  version=${3:-}
+
+  case $command in
+    (r*) command=release ;;
+    (h*) command=hotfix  ;;
+  esac
+  case $subcommand in
+    (s*) subcommand=start  ;;
+    (f*) subcommand=finish ;;
+  esac
+  if [[ -z "$version" ]]
+  then
+    case "$command-$subcommand" in
+      (release-start) version=$(awk -F "." '{ print $1"."$2+1"."$3}' < VERSION) ;;
+      (hotfix-start)  version=$(awk -F "." '{ print $1"."$2"."$3+1}' < VERSION) ;;
+      (*-finish)      version=$(cat VERSION) ;;
+    esac
+  fi
+
+  git flow $command $subcommand $version
+
+  if [[ "$subcommand" == "start" ]]
+  then
+    echo $version > VERSION
+    git add VERSION
+    git commit -m $version
+  fi
+}
 show_git() {
   typeset limit path top
   limit=$(git config dir.limit 2>/dev/null)

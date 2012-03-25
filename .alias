@@ -1,3 +1,2 @@
 alias r=rails
 alias grep='grep --color'
-alias gf='git flow'
