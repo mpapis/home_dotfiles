@@ -1,2 +1,2 @@
 gem: --no-ri --no-rdoc
-custom_shebang: $env ruby_bundler_wrapper
+custom_shebang: $env ruby_noexec_wrapper
