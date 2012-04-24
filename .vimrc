@@ -3,3 +3,6 @@ filetype indent on
 colorscheme pablo
 set number
 syntax on
+set cc=116
+set nowrap
+
