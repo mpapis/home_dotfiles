@@ -56,6 +56,13 @@ then
     curl $1 -o $(basename $1)
   }
 fi
+if ! which ldd > /dev/null 2>&1 && which otool > /dev/null 2>&1
+then
+  ldd()
+  {
+    otool -L "$@"
+  }
+fi
 
 d()
 {
