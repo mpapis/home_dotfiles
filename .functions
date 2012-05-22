@@ -177,6 +177,7 @@ __setup_ssh_agent()
   fi
 
   ssh-agent > $agent_file
+  chmod 600 $agent_file
   source $agent_file >/dev/null
 
   if [[ -t 0 ]] && ! ssh-add -l | grep $HOME/.ssh/id_rsa >/dev/null
