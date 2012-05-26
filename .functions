@@ -81,6 +81,11 @@ gpp()
 {
   git pull $@ && git push
 }
+gcaa()
+{
+  git add .
+  git commit --amend
+}
 gcam()
 {
   git add .
