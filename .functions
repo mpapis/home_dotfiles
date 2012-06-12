@@ -146,17 +146,15 @@ show_git() {
   return 1
 }
 function pgd {
-  show_git && echo -n $(
-    git status 2>/dev/null | awk -v out=$1 -v std="dirty" '{ if ($0=="# Changes to be committed:") std = "uncommited"; last=$0 } \
-      END{ if(last!="" && last!="nothing to commit (working directory clean)") { if(out!="") print out; else print std } }'
-  )
+  show_git && git status 2>/dev/null | awk -v out=$1 -v std="dirty" '{ if ($0=="# Changes to be committed:") std = "uncommited"; last=$0 } \
+    END{ if(last!="" && last!="nothing to commit (working directory clean)") { if(out!="") printf out; else printf std } }'
 }
 function pgb {
-  show_git && echo -n "$(git branch --no-color 2>/dev/null | awk -v out="$1"\
-   '/^*/ { if(out=="") print $2; else print out}')" #'
+  show_git && git branch --no-color 2>/dev/null | awk -v out="$1" \
+   '$1=="*" { if(out=="") printf $2; else printf out}' #'
 }
 function pgr {
-  show_git && echo -n "$(git status 2>/dev/null | awk -v out="$1" '/# Your branch is / { if(out=="") print $5; else print out }')" #'
+  show_git && git status 2>/dev/null | awk -v out="$1" '/# Your branch is / { if(out=="") printf $5; else printf out }' #'
 }
 function _rvm_curr {
   typeset rvm
