@@ -11,7 +11,7 @@
 !\.gitignore
 !\.profile
 !\.vimrc
-!\downloads
+!\download
 !\.local
 !\.local/share
 !\.local/share/radiotray
