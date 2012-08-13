@@ -38,12 +38,11 @@ get()
   if [[ -z "$url" ]]
   then
     url="$count"
-    count=4
+    count=2
   fi
   if [[ -z "$file" ]]
   then
-    file="$(basename "$url")"
-    file="${file%%&*}"
+    file="$(basename "${url%%\?*}")";
   fi
   echo "Save $url to $file in $count threads."
   aria2c -c -x $count -j $count -s $count $url -o $file
@@ -162,19 +161,20 @@ function _rvm_curr {
   [[ -n "${rvm}" ]] && printf "${rvm##ruby-} "
 }
 function show_function() {
-  typeset -f $1
+  typeset -f $@
 }
 function edit_function() {
   typeset body name
-  name=$1
+  name="$*"
+  name="${name// /-}"
   if
-    [[ -n "$name" ]] &&
-    show_function $name >/dev/null
+    (( $# > 0 )) &&
+    show_function $@ >/dev/null
   then
-    show_function $name > ${TMPDIR:-/tmp}/__function_${name}_1
+    show_function $@ > ${TMPDIR:-/tmp}/__function_${name}_1
     cp -f ${TMPDIR:-/tmp}/__function_${name}_1 ${TMPDIR:-/tmp}/__function_${name}_2
     ${EDITOR:-vim} ${TMPDIR:-/tmp}/__function_${name}_1
-    diff -q ${TMPDIR:-/tmp}/__function_${name}_1 ${TMPDIR:-/tmp}/__function_${name}_2 ||
+    diff -qwB ${TMPDIR:-/tmp}/__function_${name}_1 ${TMPDIR:-/tmp}/__function_${name}_2 >/dev/null ||
       source ${TMPDIR:-/tmp}/__function_${name}_1
     rm -f ${TMPDIR:-/tmp}/__function_${name}_{1,2}
   else
