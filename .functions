@@ -161,6 +161,26 @@ function _rvm_curr {
   rvm=$(rvm current)
   [[ -n "${rvm}" ]] && printf "${rvm##ruby-} "
 }
+function show_function() {
+  typeset -f $1
+}
+function edit_function() {
+  typeset body name
+  name=$1
+  if
+    [[ -n "$name" ]] &&
+    show_function $name >/dev/null
+  then
+    show_function $name > ${TMPDIR:-/tmp}/__function_${name}_1
+    cp -f ${TMPDIR:-/tmp}/__function_${name}_1 ${TMPDIR:-/tmp}/__function_${name}_2
+    ${EDITOR:-vim} ${TMPDIR:-/tmp}/__function_${name}_1
+    diff -q ${TMPDIR:-/tmp}/__function_${name}_1 ${TMPDIR:-/tmp}/__function_${name}_2 ||
+      source ${TMPDIR:-/tmp}/__function_${name}_1
+    rm -f ${TMPDIR:-/tmp}/__function_${name}_{1,2}
+  else
+    echo "there is no function $name"
+  fi
+}
 __setup_ssh_agent()
 {
   # skip if already loaded
