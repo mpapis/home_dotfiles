@@ -12,6 +12,8 @@
 !\.profile
 !\.vimrc
 !\download
+!\bin
+!\bin/*
 !\.local
 !\.local/share
 !\.local/share/radiotray

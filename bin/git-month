@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+month=${1:-$(date +%m)}
+before=$(date --date="$(date +%Y-$(date --date="$(date +%Y-7-15) +1month" +%m)-1)" +%F)
+after=$(date --date="$(date +%Y-$month-1) -1day" +%F)
+
+cd ~/projects
+
+for r in */*
+do
+  data="$(
+    builtin cd $r;
+    [[ -d .git ]] &&
+      git log --pretty=format:"%ci %ce %s" --before=$before --after=$after --no-merges | grep -i papis | sort
+  )"
+  [[ -n "$data" ]] && printf -- "--- $r:\n$data\n"
+done

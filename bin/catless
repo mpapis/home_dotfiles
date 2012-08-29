@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+typeset _file
+_file="${TMPDIR:-/tmp}/_$$/_temp_file"
+
+mkdir -p "${TMPDIR:-/tmp}/_$$/"
+cat - > "${_file}"
+
+if
+  (( $( wc -l < "${_file}" ) < ${LINES:-20} ))
+then
+  cat < "${_file}"
+else
+  less "$@" < "${_file}"
+fi
+
+rm -rf "${TMPDIR:-/tmp}/_$$/"
