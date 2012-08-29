@@ -1,23 +1,20 @@
-# Sample .bashrc for SuSE Linux
-# Copyright (c) SuSE GmbH Nuernberg
-
 # There are 3 different types of shells in bash: the login shell, normal shell
 # and interactive shell. Login shells read ~/.profile and interactive shells
 # read ~/.bashrc; in our setup, /etc/profile sources ~/.bashrc - thus all
 # settings made here will also take effect in a login shell.
-#
 # NOTE: It is recommended to make language settings in ~/.profile rather than
 # here, since multilingual X sessions would not work properly if LANG is over-
 # ridden in every subshell.
 
-export PATH=$PATH:/usr/sbin:/sbin
-export EDITOR
+export PATH EDITOR LESS
+PATH="$PATH:/usr/sbin:/sbin"
 if which mcedit >/dev/null
 then
   EDITOR=mcedit
 else
   EDITOR=vim
 fi
+LESS="-M -i -R"
 export USE_BUNDLER=try
 
 for script in ~/.rvm/scripts/{rvm,completion} ~/.alias ~/.functions ~/.shrc.local
