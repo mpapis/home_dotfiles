@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
 month=${1:-$(date +%m)}
-before=$(date --date="$(date +%Y-$(date --date="$(date +%Y-7-15) +1month" +%m)-1)" +%F)
+before=$(date --date="$(date +%Y-$(date --date="$(date +%Y-$month-15) +1month" +%m)-1)" +%F)
 after=$(date --date="$(date +%Y-$month-1) -1day" +%F)
+
+echo "#Timeline: $after - $before"
 
 cd ~/projects
 
@@ -15,3 +17,5 @@ do
   )"
   [[ -n "$data" ]] && printf -- "--- $r:\n$data\n"
 done
+
+echo "#Timeline: $after - $before"
