@@ -7,7 +7,7 @@ mkdir -p "${TMPDIR:-/tmp}/_$$/"
 cat - > "${_file}"
 
 if
-  (( $( wc -l < "${_file}" ) < ${LINES:-20} ))
+  (( $( wc -l < "${_file}" ) < 2*${LINES:-20} ))
 then
   cat < "${_file}"
 else
