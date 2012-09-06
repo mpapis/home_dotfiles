@@ -176,12 +176,12 @@ function edit_function() {
     (( $# > 0 )) &&
     show_function $@ >/dev/null
   then
-    show_function $@ > ${TMPDIR:-/tmp}/__function_${name}_1
-    cp -f ${TMPDIR:-/tmp}/__function_${name}_1 ${TMPDIR:-/tmp}/__function_${name}_2
-    ${EDITOR:-vim} ${TMPDIR:-/tmp}/__function_${name}_1
-    diff -qwB ${TMPDIR:-/tmp}/__function_${name}_1 ${TMPDIR:-/tmp}/__function_${name}_2 >/dev/null ||
-      source ${TMPDIR:-/tmp}/__function_${name}_1
-    rm -f ${TMPDIR:-/tmp}/__function_${name}_{1,2}
+    show_function $@ > ${TMPDIR:-/tmp}/__function_${name}_1.sh
+    cp -f ${TMPDIR:-/tmp}/__function_${name}_1.sh ${TMPDIR:-/tmp}/__function_${name}_2.sh
+    ${EDITOR:-vim} ${TMPDIR:-/tmp}/__function_${name}_1.sh
+    diff -qwB ${TMPDIR:-/tmp}/__function_${name}_1.sh ${TMPDIR:-/tmp}/__function_${name}_2.sh >/dev/null ||
+      source ${TMPDIR:-/tmp}/__function_${name}_1.sh
+    rm -f ${TMPDIR:-/tmp}/__function_${name}_{1,2}.sh
   else
     echo "there is no function $name"
   fi
