@@ -186,6 +186,24 @@ function edit_function() {
     echo "there is no function $name"
   fi
 }
+function edit_variable() {
+  typeset body name
+  name="$*"
+  name="${name// /-}"
+  if
+    (( $# > 0 )) &&
+    eval "[[ -n \${$1} ]]"
+  then
+    set | grep -a "^$1=" > ${TMPDIR:-/tmp}/__function_${name}_1.sh
+    cp -f ${TMPDIR:-/tmp}/__function_${name}_1.sh ${TMPDIR:-/tmp}/__function_${name}_2.sh
+    ${EDITOR:-vim} ${TMPDIR:-/tmp}/__function_${name}_1.sh
+    diff -qwB ${TMPDIR:-/tmp}/__function_${name}_1.sh ${TMPDIR:-/tmp}/__function_${name}_2.sh >/dev/null ||
+      source ${TMPDIR:-/tmp}/__function_${name}_1.sh
+    rm -f ${TMPDIR:-/tmp}/__function_${name}_{1,2}.sh
+  else
+    echo "there is no function $name"
+  fi
+}
 __setup_ssh_agent()
 {
   # skip if already loaded
