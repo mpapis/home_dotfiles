@@ -8,3 +8,6 @@
 	pager = catless -RS
 [alias]
 	sync = !sh -c \"git push wayne master && git push origin master && git checkout stable && git push wayne stable && git push origin stable && git checkout master && git push wayne --tags\"
+[projects]
+	root = $HOME/projects
+	depth = 2

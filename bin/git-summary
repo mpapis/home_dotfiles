@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+case "${1:-month}" in
+  (week)
+    week=$( date --date="${2:-0} week" +%W )
+    before="$( date --date="$(date +%Y)0101 $week week +1 day"   +%F )"
+    after="$(  date --date="$(date +%Y)0101 $(( week - 1)) week" +%F )"
+    ;;
+  (month)
+    month=${2:-$( date +%m )}
+    before=$(date --date="$(date +%Y-$(date --date="$(date +%Y-$month-15) +1month" +%m)-1)" +%F)
+    after=$(date --date="$(date +%Y-$month-1) -1day" +%F)
+    ;;
+  (since)
+    before=$(date +%F)
+    shift
+    after=$(date --date="$*" +%F)
+    ;;
+  (help|--help)
+    printf "%b" "Usage:
+    $0 week [-{number}]   # show summary for current/relative week
+    $0 [month [{number}]] # show summary for current/given month
+    $0 since {date}       # show summary since the given date, check 'info date' for info
+    $0 help               # this help
+"
+    exit 0
+    ;;
+esac
+
+[[ -n "${after:-}" && -n "${before:-}" ]] ||
+{
+  echo "could not calculate timeline!"
+  exit 1
+}
+
+projects_root="$( git config --get projects.root )"
+[[ -n "${projects_root:-}" ]] ||
+{
+  echo "projects.root not set, try: git config --global projects.root ~/projects"
+  exit 2
+}
+
+eval "projects_root=\"${projects_root%/}\""
+projects_depth=$( git config --get projects.depth )
+projects_depth=${projects_depth:-3}
+projects_depth=$((projects_depth + 2))
+
+IFS=$'\n'
+projects=( $(
+  find "$projects_root" -maxdepth $projects_depth -path "*/.git/config"
+) )
+
+params=( --after=$after )
+if (( $( date -d $before +%s ) < $( date +%s ) ))
+then params+=( --before=$before )
+fi
+#TODO: add support for: params+=( --no-merges )
+
+echo "#Timeline: $after - $before"
+
+for r in "${projects[@]}"
+do
+  r="${r%/.git/config}" # path to project
+  data="$(
+    builtin cd $r;
+    user_email="$( git config --get user.email )" # per project
+    git log --pretty=format:"%ce %ci %s%n" "${params[@]}" |
+      awk '$1=="'"$user_email"'"{$1="";print}' | cut -c 2- | sort
+  )"
+  [[ -z "$data" ]] ||
+  {
+    r="${r#${projects_root}/}" # relative path to project
+    printf -- "--- $r:\n$data\n"
+  }
+done
+
+echo "#Timeline: $after - $before"
