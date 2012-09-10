@@ -3,6 +3,10 @@
 month=${1:-$(date +%m)}
 before=$(date --date="$(date +%Y-$(date --date="$(date +%Y-$month-15) +1month" +%m)-1)" +%F)
 after=$(date --date="$(date +%Y-$month-1) -1day" +%F)
+params=( --after=$after )
+if (( $( date -d $before +%s ) < $( date +%s ) ))
+then params+=( --before=$before )
+fi
 
 echo "#Timeline: $after - $before"
 
@@ -13,7 +17,7 @@ do
   data="$(
     builtin cd $r;
     [[ -d .git ]] &&
-      git log --pretty=format:"%ci %ce %s" --before=$before --after=$after --no-merges | grep -i papis | sort
+      git log --pretty=format:"%ci %ce %s" "${params[@]}" --no-merges | grep -i papis | sort
   )"
   [[ -n "$data" ]] && printf -- "--- $r:\n$data\n"
 done
