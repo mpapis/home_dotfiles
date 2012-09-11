@@ -17,6 +17,6 @@ fi
 LESS="-M -i -R"
 export USE_BUNDLER=try
 
-for script in ~/.rvm/scripts/{rvm,completion} ~/.alias ~/.functions ~/.shrc.local
+for script in ~/.alias ~/.functions ~/.shrc.local
 do [[ -s $script ]] && source $script || true
 done

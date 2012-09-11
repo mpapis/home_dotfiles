@@ -27,8 +27,13 @@ __date()
         shift
         _date_args+=( "${_iterator}" )
       done
-      if [[ -n "${_given_date}" ]]
-      then _date_args+=( -f %F "${_given_date}" )
+      if
+        [[ -n "${_given_date}" ]]
+      then
+        if [[ "${_given_date}" =~ " " ]]
+        then _date_args+=( -f "%F %T" "${_given_date}" )
+        else _date_args+=( -f %F "${_given_date}" )
+        fi
       fi
       date -j "${_date_args[@]}" "${_output_format}"
       ;;
@@ -90,10 +95,10 @@ projects=( $(
 
 day_start=$( git config --get projects.day.start )
 day_end=$(   git config --get projects.day.end   )
-after="$( __date "+%F %T %z" "$after" ${day_start:-+6hours} )"
-before="$( __date "+%F %T %z" "$before" ${day_end:-+6hours} )"
+after="$( __date "+%F %T %z" "$after 00:00:00" ${day_start:-+6hours} )"
+before="$( __date "+%F %T %z" "$before 00:00:00" ${day_end:-+6hours} )"
 params=( --after="$after"  )
-if (( $( date -d "$before" +%s ) < $( date +%s ) ))
+if (( $( __date +%s "$before" ) < $( date +%s ) ))
 then params+=( --before="$before" )
 fi
 #TODO: add support for: params+=( --no-merges )
