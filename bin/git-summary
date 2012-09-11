@@ -52,8 +52,8 @@ __date()
 case "${1:-month}" in
   (week)
     week=$( __date +%W "" ${2:-0}week )
-    before="$( __date +%F "$(date +%Y)-01-01" "${week}week"         "+1day" )"
-    after="$(  __date +%F "$(date +%Y)-01-01" "$(( week - 1 ))week" "+1day" )"
+    before="$( __date +%F "$(date +%Y)-01-01" "+${week}week"         "+1day" )"
+    after="$(  __date +%F "$(date +%Y)-01-01" "+$(( week - 1 ))week" "+1day" )"
     ;;
   (month)
     month=${2:-$( date +%m )}
