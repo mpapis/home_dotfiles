@@ -18,7 +18,8 @@ __date()
       while (( $# ))
       do
         _iterator="-v$1"
-        for _replacement in month week day hour
+        _iterator="${_iterator//hour/Hour}"
+        for _replacement in month week day Hour
         do
           _iterator="${_iterator//${_replacement}s/${_replacement:0:1}}"
           _iterator="${_iterator//${_replacement}/${_replacement:0:1}}"
