@@ -1,15 +1,52 @@
 #!/usr/bin/env bash
 
+# wrapper to support different date commands
+# transforms GNU format to BSD format
+__date()
+{
+  typeset _given_date _output_format
+  _output_format="$1"
+  shift
+  _given_date="${1:-}"
+  (( $# == 0 )) || shift
+
+  case "$(uname)" in
+    (Darwin)
+      typeset _iterator _replacement
+      typeset -a _date_args
+      _date_args=()
+      while (( $# ))
+      do
+        _iterator="-v$1"
+        for _replacement in month week day hour
+        do
+          _iterator="${_iterator//${_replacement}s/${_replacement:0:1}/}"
+          _iterator="${_iterator//${_replacement}/${_replacement:0:1}/}"
+        done
+        shift
+        _date_args+=( "${_iterator}" )
+      done
+      if [[ -n "${_given_date}" ]]
+      then _date_args+=( -f %F "${_given_date}" )
+      fi
+      date -j "${_date_args[@]}" "${_output_format}"
+      ;;
+    (*)
+      date --date="${_given_date} $*" "${_output_format}"
+      ;;
+  esac
+}
+
 case "${1:-month}" in
   (week)
-    week=$( date --date="${2:-0} week" +%W )
-    before="$( date --date="$(date +%Y)0101 $week week +1 day"   +%F )"
-    after="$(  date --date="$(date +%Y)0101 $(( week - 1)) week" +%F )"
+    week=$( __date +%W "" ${2:-0}week )
+    before="$( __date +%F "$(date +%Y)-01-01" "${week}week"         "+1day" )"
+    after="$(  __date +%F "$(date +%Y)-01-01" "$(( week - 1 ))week" "+1day" )"
     ;;
   (month)
     month=${2:-$( date +%m )}
-    before=$(date --date="$(date +%Y-$(date --date="$(date +%Y-$month-15) +1month" +%m)-1)" +%F)
-    after=$(date --date="$(date +%Y-$month-1) -1day" +%F)
+    after=$( __date +%F        "$( date +%Y-$month-01 )" )
+    before=$( __date +%Y-%m-01 "$( date +%Y-$month-15 )" +1month -1day )
     ;;
   (since)
     before=$(date +%F)
@@ -50,9 +87,13 @@ projects=( $(
   find "$projects_root" -maxdepth $projects_depth -path "*/.git/config"
 ) )
 
-params=( --after=$after )
-if (( $( date -d $before +%s ) < $( date +%s ) ))
-then params+=( --before=$before )
+day_start=$( git config --get projects.day.start )
+day_end=$(   git config --get projects.day.end   )
+after="$( __date "+%F %T %z" "$after" ${day_start:-+6hours} )"
+before="$( __date "+%F %T %z" "$before" ${day_end:-+6hours} )"
+params=( --after="$after"  )
+if (( $( date -d "$before" +%s ) < $( date +%s ) ))
+then params+=( --before="$before" )
 fi
 #TODO: add support for: params+=( --no-merges )
 
@@ -63,7 +104,7 @@ do
   r="${r%/.git/config}" # path to project
   data="$(
     builtin cd $r;
-    user_email="$( git config --get user.email )" # per project
+    user_email="$( git config --get user.email )" # allow per project
     git log --pretty=format:"%ce %ci %s%n" "${params[@]}" |
       awk '$1=="'"$user_email"'"{$1="";print}' | cut -c 2- | sort
   )"
