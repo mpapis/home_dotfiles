@@ -20,8 +20,8 @@ __date()
         _iterator="-v$1"
         for _replacement in month week day hour
         do
-          _iterator="${_iterator//${_replacement}s/${_replacement:0:1}/}"
-          _iterator="${_iterator//${_replacement}/${_replacement:0:1}/}"
+          _iterator="${_iterator//${_replacement}s/${_replacement:0:1}}"
+          _iterator="${_iterator//${_replacement}/${_replacement:0:1}}"
         done
         shift
         _date_args+=( "${_iterator}" )
