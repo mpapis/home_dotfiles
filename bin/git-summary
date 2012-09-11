@@ -27,14 +27,20 @@ __date()
         shift
         _date_args+=( "${_iterator}" )
       done
-      if
-        [[ -n "${_given_date}" ]]
-      then
-        if [[ "${_given_date}" =~ " " ]]
-        then _date_args+=( -f "%F %T" "${_given_date}" )
-        else _date_args+=( -f %F "${_given_date}" )
-        fi
-      fi
+      case "${_given_date}" in
+        (*[[:space:]]*[[:space:]]+*) # includes timezone
+          _date_args+=( -f "%F %T %z" "${_given_date}" )
+          ;;
+        (*[[:space:]]*) # includes time
+          _date_args+=( -f "%F %T" "${_given_date}" )
+          ;;
+        ("") # empty
+          true
+          ;;
+        (*)
+          _date_args+=( -f %F "${_given_date}" )
+          ;;
+      esac
       date -j "${_date_args[@]}" "${_output_format}"
       ;;
     (*)
