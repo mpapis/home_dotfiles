@@ -48,6 +48,7 @@ __date()
       ;;
   esac
 }
+export -f __date
 
 case "${1:-month}" in
   (week)
@@ -117,13 +118,12 @@ do
   data="$(
     builtin cd $r;
     user_email="$( git config --get user.email )" # allow per project
-    git log --pretty=format:"%ce %ci %s%n" "${params[@]}" |
-      awk '$1=="'"$user_email"'"{$1="";print}' | cut -c 2- | sort
+    git log --pretty=format:"%h,%ci,%s" "${params[@]}" --author="$user_email"
   )"
   [[ -z "$data" ]] ||
   {
-    r="${r#${projects_root}/}" # relative path to project
-    printf -- "--- $r:\n$data\n"
+    printf "%b" "--- ${r#${projects_root}/}:\n" # relative path to project
+    printf "%b" "$data\n" | awk -F, '{"__date +\"%F %T\" "$2 | getline $2} {print}' | sort -k 2 -k 3
   }
 done
 
