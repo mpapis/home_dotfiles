@@ -6,16 +6,14 @@
 # here, since multilingual X sessions would not work properly if LANG is over-
 # ridden in every subshell.
 
-export PATH EDITOR LESS
-PATH="$PATH:/usr/sbin:/sbin"
+export PATH EDITOR LESS USE_BUNDLER
+PATH="$PATH:/usr/sbin:/sbin:$HOME/bin"
 if which mcedit >/dev/null
-then
-  EDITOR=mcedit
-else
-  EDITOR=vim
+then EDITOR=mcedit
+else EDITOR=vim
 fi
 LESS="-M -i -R"
-export USE_BUNDLER=try
+USE_BUNDLER=try
 
 for script in ~/.alias ~/.functions ~/.shrc.local
 do [[ -s $script ]] && source $script || true
