@@ -12,5 +12,5 @@
 	root = $HOME/projects
 	depth = 2
 [projects "day"]
-	start = +8hours
-	end = +12hours
+	start = +3hour
+	end = +8hour +1day
