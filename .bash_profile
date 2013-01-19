@@ -1,6 +1,7 @@
 export projects_path="$HOME/projects"
 
 [[ -s "$HOME/.bashrc" ]] && source "$HOME/.bashrc" || true
+# source ~/.profile
 
 if
   [[ -x /usr/bin/fortune ]]
