@@ -58,8 +58,15 @@ case "${1:-month}" in
     ;;
   (month)
     month=${2:-$( date +%m )}
-    after=$( __date +%F        "$( date +%Y-$month-01 )" )
-    before=$( __date +%Y-%m-01 "$( date +%Y-$month-15 )" +1month -1day )
+    if
+      (( $( date +%d ) > 15 ))
+    then
+      after=$( __date +%F        "$( date +%Y-$month-01 )" )
+      before=$( __date +%Y-%m-01 "$( date +%Y-$month-15 )" +1month -1day )
+    else
+      after=$( __date +%F        "$( date +%Y-$month-01 )" -1month)
+      before=$( __date +%Y-%m-01 "$( date +%Y-$month-15 )" -1day )
+    fi
     ;;
   (since)
     before=$(date +%F)
