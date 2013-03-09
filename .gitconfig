@@ -14,3 +14,5 @@
 [projects "day"]
 	start = +3hour
 	end = +8hour +1day
+[push]
+	default = current
