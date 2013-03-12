@@ -61,7 +61,7 @@ case "${1:-month}" in
   (month)
     month=${2:-$( date +%m )}
     if
-      (( $( date +%d ) > 15 ))
+      [[ -z "${2}" ]] && (( $( date +%d ) > 15 ))
     then
       after=$( __date +%F        "$( date +%Y-$month-01 )" )
       before=$( __date +%Y-%m-01 "$( date +%Y-$month-15 )" +1month -1day )
