@@ -152,7 +152,7 @@ show_git() {
 function pgd {
   show_git && git status --porcelain 2>/dev/null | awk -v out="$1" -F '' '
 BEGIN  { x=0;y=0; }
-$1!=" "{ x++; }
+$1!=" " && $1!="?"{ x++; }
 $2!=" "{ y++; }
 END{
   if(out==""){
