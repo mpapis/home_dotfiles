@@ -6,8 +6,8 @@ show_help()
 	# USAGE:
 	#      target             source        description
 	git pr user/repo[/branch] [user:]branch -i issue-id
-	git pr user/repo[/branch] [user:]branch "tittle" "body"
-	git pr user/repo[/branch] [user:]branch "tittle" <<BODY
+	git pr user/repo[/branch] [user:]branch "title" "body"
+	git pr user/repo[/branch] [user:]branch "title" <<BODY
 	...
 	BODY
 	#
