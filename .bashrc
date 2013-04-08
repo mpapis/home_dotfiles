@@ -18,5 +18,4 @@ export PS1='($?) \[\033[36m\]$(_rvm_curr)\[\033[0m\]\u@\h:\[\033[33m\]\w\[\033[0
 
 export BUNDLER_BLACKLIST="gist rake"
 
-
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+export PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting

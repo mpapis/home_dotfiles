@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+while
+  (( $# ))
+do
+  awk '
+BEGIN   { indent=0; }
+
+# clean spaces
+{ gsub(/^\s+/, "", $0); gsub(/\s+$/, "", $0); }
+
+# find finising of block, has to be before printing
+/^<\//   { indent--; }
+
+# just in case do not go bellow 0 - this has a bad reverse display effect
+indent<0 { indent=0; }
+
+# do not indent empty lines
+/^$/ { print "" }
+
+# print accounting for the new indentation
+! /^$/ { printf "%-"indent*2"s%s\n", "", $0; }
+
+# detect single tag start
+/^<[^\!^\/][^<^>]*[^\/]>$/ { indent++; }
+
+# detect multi tag start
+/^<[^\!^\/].*<[^\/]+>$/    { indent++; }
+
+# detect single one letter tag start
+/^<[^\/]>$/                { indent++; }
+
+' < "$1" > "$1.new" && mv "$1.new" "$1"
+  shift
+done

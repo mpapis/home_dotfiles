@@ -52,14 +52,23 @@ export -f __date
 
 case "${1:-month}" in
   (week)
-    week=$( __date +%W "" ${2:-0}week )
-    before="$( __date +%F "$(date +%Y)-01-01" "+${week}week"         "+1day" )"
-    after="$(  __date +%F "$(date +%Y)-01-01" "+$(( week - 1 ))week" "+1day" )"
+    week=$( __date +%U "" ${2:-0}week )
+    week=${week##0}
+    week=${week:-0}
+    before="$( __date +%F "$(date +%Y)-01-01" "+${week}week"         "-1day" )"
+    after="$(  __date +%F "$(date +%Y)-01-01" "+$(( week - 1 ))week" "-1day" )"
     ;;
   (month)
     month=${2:-$( date +%m )}
-    after=$( __date +%F        "$( date +%Y-$month-01 )" )
-    before=$( __date +%Y-%m-01 "$( date +%Y-$month-15 )" +1month -1day )
+    if
+      [[ -z "${2}" ]] && (( $( date +%d ) > 15 ))
+    then
+      after=$( __date +%F        "$( date +%Y-$month-01 )" )
+      before=$( __date +%Y-%m-01 "$( date +%Y-$month-15 )" +1month -1day )
+    else
+      after=$( __date +%F        "$( date +%Y-$month-01 )" -1month)
+      before=$( __date +%Y-%m-01 "$( date +%Y-$month-15 )" -1day )
+    fi
     ;;
   (since)
     before=$(date +%F)

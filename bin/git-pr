@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+show_help()
+{
+  cat <<-HELP
+	# USAGE:
+	#      target             source        description
+	git pr user/repo[/branch] [user:]branch -i issue-id
+	git pr user/repo[/branch] [user:]branch "title" "body"
+	git pr user/repo[/branch] [user:]branch "title" <<BODY
+	...
+	BODY
+	#
+	# Example - create PR from issue:
+	git pr wayneeseguin/rvm a_fix_branch -i 1500
+	#
+	# Example - create new PR:
+	git pr wayneeseguin/rvm a_fix_branch "a fix" <<BODY
+	some fix description
+	BODY
+HELP
+}
+
+case "${1:-}" in
+  (--help|help)
+    show_help
+    exit 0
+    ;;
+  ("")
+    show_help
+    exit 1
+    ;;
+esac
+
+: GH_USER:{GH_USER:-$USER}
+
+TARGET="$1"
+SOURCE="$2"
+if
+  [[ "$3" == "-i" ]]
+then
+  ISSUE_ID="$4"
+else
+  ISSUE_ID=""
+  TITLE="$3"
+  BODY="${4:-$(cat -)}"
+fi
+
+PROJECT_TARGET_BRANCH=master
+IFS=/ read PROJECT_TARGET_USER PROJECT_NAME PROJECT_TARGET_BRANCH <<<"$TARGET"
+
+case "${SORCE}" in
+  (:*)
+    PROJECT_SOURCE_USER="${PROJECT_TARGET_USER}"
+    PROJECT_SOURCE_BRANCH="${SOURCE#:}"
+    ;;
+  (*:)
+    PROJECT_SOURCE_USER="${SOURCE%:}"
+    PROJECT_SOURCE_BRANCH="master"
+    ;;
+  (*:*)
+    PROJECT_SOURCE_USER="${SOURCE%%:*}"
+    PROJECT_SOURCE_BRANCH="${SOURCE#*:}"
+    ;;
+  (*)
+    PROJECT_SOURCE_USER="${PROJECT_TARGET_USER}"
+    PROJECT_SOURCE_BRANCH="${SOUCE}"
+    ;;
+esac
+
+DATA="{"
+if [[ -n "$ISSUE_ID" ]]
+then DATA+="\"issue\": \"$ISSUE_ID\""
+else DATA+="\"title\": \"$TITLE\", \"body\": \"$BODY\""
+fi
+DATA+=", \"head\": \"$PROJECT_SOURCE_USER:$PROJECT_SOURCE_BRANCH\""
+DATA+=", \"base\": \"$PROJECT_TARGET_BRANCH\""
+DATA+="}"
+
+URL="https://api.github.com/repos/$PROJECT_TARGET_USER/$PROJECT_NAME/pulls"
+
+echo "user = $GH_USER:$(read -sp "$GH_USER github.com password:" pass; echo $pass)" |
+  curl -K - --request POST --data "$DATA" "$URL"

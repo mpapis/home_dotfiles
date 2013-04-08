@@ -150,12 +150,22 @@ show_git() {
   return 1
 }
 function pgd {
-  show_git && git status 2>/dev/null | awk -v out=$1 -v std="dirty" '{ if ($0=="# Changes to be committed:") std = "uncommited"; last=$0 } \
-    END{ if(last!="" && last!="nothing to commit (working directory clean)") { if(out!="") printf out; else printf std } }'
+  show_git && git status --porcelain 2>/dev/null | awk -v out="$1" -F '' '
+BEGIN  { x=0;y=0; }
+$1!=" " && $1!="?"{ x++; }
+$2!=" "{ y++; }
+END{
+  if(out==""){
+    if(x>0)print "uncomitted"; else if (y>0) print "dirty";
+  }
+  else{
+    if(x>0||y>0)print out;
+  }
+}
+'
 }
 function pgb {
-  show_git && git branch --no-color 2>/dev/null | awk -v out="$1" \
-   '$1=="*" { if(out=="") printf $2; else printf out}' #'
+  show_git && __git_ps1 "${1:-%s}" 2>/dev/null
 }
 function pgr {
   show_git && git status 2>/dev/null | awk -v out="$1" '/# Your branch is / { if(out=="") printf $5; else printf out }' #'
