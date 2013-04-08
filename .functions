@@ -150,7 +150,9 @@ show_git() {
   return 1
 }
 function pgd {
-  show_git && git status --porcelain 2>/dev/null | awk -v out="$1" -F '' '
+  show_git && git status --porcelain 2>/dev/null |
+  sed 's/^\(.\)\(.\).*$/\1 \2/' | # ?? ... => ? ?
+  awk -v out="$1" '
 BEGIN  { x=0;y=0; }
 $1!=" " && $1!="?"{ x++; }
 $2!=" "{ y++; }
