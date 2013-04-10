@@ -32,7 +32,7 @@ case "${1:-}" in
     ;;
 esac
 
-: GH_USER:{GH_USER:-$USER}
+: GH_USER:${GH_USER:=$USER}
 
 TARGET="$1"
 SOURCE="$2"
@@ -46,10 +46,10 @@ else
   BODY="${4:-$(cat -)}"
 fi
 
-PROJECT_TARGET_BRANCH=master
 IFS=/ read PROJECT_TARGET_USER PROJECT_NAME PROJECT_TARGET_BRANCH <<<"$TARGET"
+: ${PROJECT_TARGET_BRANCH:=master}
 
-case "${SORCE}" in
+case "${SOURCE}" in
   (:*)
     PROJECT_SOURCE_USER="${PROJECT_TARGET_USER}"
     PROJECT_SOURCE_BRANCH="${SOURCE#:}"
@@ -64,7 +64,7 @@ case "${SORCE}" in
     ;;
   (*)
     PROJECT_SOURCE_USER="${PROJECT_TARGET_USER}"
-    PROJECT_SOURCE_BRANCH="${SOUCE}"
+    PROJECT_SOURCE_BRANCH="${SOURCE}"
     ;;
 esac
 
