@@ -2,6 +2,7 @@ alias r=rails
 alias grep='grep --color'
 alias "g?=git status"
 alias "g??=git diff"
+alias "g=git status; git diff"
 alias g!="git commit -am"
 alias g+="git add"
 alias g-="git rm"
