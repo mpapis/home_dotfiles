@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+modem_manager()
+{
+  dbus-send --system --print-reply=literal --dest=org.freedesktop.ModemManager "$@"
+}
+
+check_state()
+{
+  STATE=$(
+    modem_manager $1 org.freedesktop.DBus.Properties.Get string:org.freedesktop.ModemManager.Modem.Gsm.Ussd string:State |
+      awk '/variant/{print $2}'
+  )
+}
+
+ussd_cancel()
+{
+  echo "Cacnceling previous operation."
+  modem_manager $1 org.freedesktop.ModemManager.Modem.Gsm.Ussd.Cancel >/dev/null 2>&1
+}
+
+ussd_send()
+{
+  typeset RESPONSE RESULT
+  echo -n "Sending $2: "
+  if
+    RESPONSE="$(
+      modem_manager $1 org.freedesktop.ModemManager.Modem.Gsm.Ussd.Initiate "string:$2" 2>&1
+    )"
+  then
+    echo "$RESPONSE"
+  else
+    RESULT=$?
+    case "$RESPONSE" in
+      (*org.freedesktop.DBus.Error.AccessDenied*)
+        echo "FAILED! AccessDenied! try with 'sudo'."
+        ;;
+      (*)
+        echo "FAILED($RESULT) => $RESPONSE" >&2
+        return $RESULT
+        ;;
+    esac
+  fi
+}
+export ussd_send
+
+CODE="${1:-*100#}"
+MODEM=$(
+  modem_manager /org/freedesktop/ModemManager org.freedesktop.ModemManager.EnumerateDevices |
+    awk '/ModemManager/{print $1}'
+)
+
+if
+  [[ -n "$MODEM" ]]
+then
+  check_state $MODEM
+  echo "Found modem $MODEM State: $STATE"
+else
+  echo "No modem found!" >&2
+  exit 1
+fi
+
+case ${STATE:-idle} in
+  (idle) true               ;; # it's all fine
+  (*)    ussd_cancel $MODEM ;; # stop previos operation before continuing
+esac
+
+ussd_send $MODEM $CODE || ussd_cancel $MODEM
