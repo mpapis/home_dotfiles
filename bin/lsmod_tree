@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+
+begin
+  require 'flat2tree'
+rescue LoadError
+  puts "Could not load 'flat2tree', try: gem install flat2tree"
+  exit 1
+end
+require 'optparse'
+
+
+class Lsmod
+  def read_lsmod
+    `lsmod`.split(/\n/).map(&:strip)[1..-1]
+  end
+
+  def parsed_lsmod
+    read_lsmod.map do |line|
+      name, size, usage, used_by = line.split(/ +/)
+      used_by ||= ""
+      Flat2Tree::Entry.new(name, used_by.split(/,/) || [])
+    end
+  end
+
+  def to_hash
+    @data = Flat2Tree.dependencies_from(parsed_lsmod)
+  end
+
+  def reverse_hash
+    @data = Flat2Tree.reverse_dependencies_from(parsed_lsmod)
+  end
+
+  def to_s
+    @data.nodes * "\n"
+  end
+
+  def initialize(options = {})
+    options['reverse'] || options['r'] ? reverse_hash : to_hash
+    @data = @data.simplify if options['simple'] || options['s']
+  end
+end
+
+puts Lsmod.new(ARGV.getopts('sr','simple','reverse'))
