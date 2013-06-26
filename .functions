@@ -243,6 +243,27 @@ __setup_ssh_agent()
     ssh-add
   fi
 }
+function print_part()
+{
+  (( $1 )) || return 0
+  typeset ret
+  ret="$1 $2"
+  (( $1 == 1 )) || ret="${ret}s"
+  printf "$ret "
+}
+function time_offset()
+{
+  typeset years months days hours minutes seconds
+  minutes="$(( $1 / 60 % 60 ))"
+  hours="$(( $1 / 3600 % 24 ))"
+  days="$(( $1 / 86400 % 31 ))"
+  months="$(( $1 / 2678400 % 12 ))"
+  years="$(( $1 / 31536000 ))"
+  seconds="$(( $1 % 60 ))"
+  for part in year month day hour minute second
+  do eval "print_part \${${part}s} ${part}"
+  done
+}
 function n()
 {
   typeset return_status
@@ -257,7 +278,7 @@ function n()
   then
     notify-send --app-name="N $1" "
 Finished: $*
-Took: ${__n_time} seconds
+Took: $(time_offset __n_time)
 Status: $return_status
 "
     fi;
