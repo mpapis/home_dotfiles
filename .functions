@@ -243,6 +243,26 @@ __setup_ssh_agent()
     ssh-add
   fi
 }
+function n()
+{
+  typeset return_status
+  typeset __n_time=$( date +%s )
+  if "$@"
+  then return_status=0
+  else return_status=$?
+  fi
+  __n_time=$(( $( date +%s ) - __n_time ))
+  if
+    (( __n_time > ${n_time:-10} ))
+  then
+    notify-send --app-name="N $1" "
+Finished: $*
+Took: ${__n_time} seconds
+Status: $return_status
+"
+    fi;
+    return $return_status
+}
 __backtrace()
 {
   typeset counter
