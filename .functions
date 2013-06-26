@@ -173,9 +173,9 @@ function pgr {
   show_git && git status 2>/dev/null | awk -v out="$1" '/# Your branch is / { if(out=="") printf $5; else printf out }' #'
 }
 function _rvm_curr {
-  typeset rvm
-  rvm=$(rvm current)
-  [[ -n "${rvm}" ]] && printf "${rvm##ruby-} "
+  typeset __rvm_curr
+  __rvm_curr=$(__rvm_env_string)
+  [[ -n "${__rvm_curr}" ]] && printf "${__rvm_curr##ruby-} "
 }
 function show_function() {
   typeset -f $@
