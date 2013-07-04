@@ -138,9 +138,20 @@ function ssh_image()
   fi
 }
 
+function ssh_copy_id_to_image()
+{
+  ssh-copy-id "pi@localhost -p $PORT -o UserKnownHostsFile=/dev/null -o NoHostAuthenticationForLocalhost=yes"
+}
+
+function scp_image()
+{
+  scp -P $PORT -o UserKnownHostsFile=/dev/null -o NoHostAuthenticationForLocalhost=yes "$@"
+}
+
 function usage()
 {
-  echo "$0 [start_ssh|start|stop|status|wait_ssh|ssh|usage]"
+  echo "$0 [start_ssh|start|stop|status|wait_ssh|ssh|ssh-copy-id|scp|usage]"
+  echo "For myarm scp use 'pi@localhost' as the remote machine"
 }
 
 case "${1:-}" in
@@ -164,6 +175,13 @@ case "${1:-}" in
     ;;
   (ssh)
     ssh_image
+    ;;
+  (ssh-copy-id)
+    ssh_copy_id_to_image
+    ;;
+  (scp)
+    shift
+    scp_image "$@"
     ;;
   (usage)
     usage
