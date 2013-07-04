@@ -171,6 +171,10 @@ case "${1:-}" in
   (stop)
     image_running && stop_image
     ;;
+  (restart)
+    image_running && stop_image
+    start_image
+    ;;
   (status)
     show_status
     image_running
