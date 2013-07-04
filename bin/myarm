@@ -1,0 +1,175 @@
+#!/usr/bin/env bash
+
+function big_fail()
+{
+  echo "$1"
+  exit ${2:-1}
+}
+
+if
+  [[ -f ".myarm" ]]
+then
+  source ".myarm"
+else
+  big_fail "Failed to find file '.myarm', it should contain:
+#required:
+IMAGE=2013-05-25-wheezy-raspbian.img
+PORT=5022
+#optional:
+CPU=arm1176
+RAM=256
+"
+fi
+
+[[ -n "${IMAGE:-}" ]] || big_fail "missing IMAGE=... check your '.myarm'."
+[[ -n "${PORT:-}"  ]] || big_fail "missing PORT=... check your '.myarm'."
+: ${CPU:=arm1176}
+: ${RAM:=256}
+
+report_status()
+{
+  if (( $2 == 0 ))
+  then echo "Finished $1"
+  else
+    echo "Failed $1 with status $2"
+    return $2
+  fi
+}
+
+function make_sure_swap_img_exist()
+{
+  [[ -f /dev/shm/swap-${IMAGE##*/} ]] || {
+    echo "Swap missing - creating"
+    qemu-img create /dev/shm/swap-${IMAGE##*/} 2G
+    mkswap /dev/shm/swap-${IMAGE##*/}
+    echo "Swap created"
+  }
+}
+
+function start_image()
+{
+  make_sure_swap_img_exist
+  echo "Starting image"
+  qemu-system-arm \
+    -cpu $CPU \
+    -m $RAM \
+    -M versatilepb \
+    -kernel kernel-qemu \
+    -append "root=/dev/sda2 panic=1" \
+    -hda $IMAGE \
+    -hdb /dev/shm/swap-${IMAGE##*/} \
+    -redir tcp:$PORT::22 \
+    -ctrl-grab \
+    -no-reboot \
+    -daemonize \
+    -localtime \
+    -display none
+  report_status "starting image" $? || return $?
+}
+
+function stop_image()
+{
+  typeset __pid=$(image_pid)
+  if
+    [[ -n "$__pid" ]]
+  then
+    echo "Stopping image"
+    \kill "$__pid"
+    wait_for 10 image_stopped
+    image_stopped
+    report_status "stopping image" $? || return $?
+  else
+    echo "No pid found for image, assuming it's stopped."
+  fi
+}
+
+function image_pid()
+{
+  ps aux | grep -v awk | awk "/$IMAGE/"'{print $2}'
+}
+
+function image_running()
+{
+  ps aux | grep -v grep | grep $IMAGE >/dev/null
+}
+
+function image_stopped()
+{
+  ! image_running
+}
+
+function show_status()
+{
+  if image_running
+  then echo "Image running"
+  else echo "Image stopped"
+  fi
+}
+
+function port_available()
+{
+  netstat -tln 2>/dev/null | grep "0.0.0.0:$PORT" > /dev/null
+}
+
+function wait_for()
+{
+  typeset __counter=0
+  typeset __timeout=$1
+  shift
+  printf "Waiting ${__timeout}s for $*"
+  while
+    (( __counter < __timeout ))
+  do
+    printf "%b" "."
+    if "$@"
+    then break
+    fi
+    sleep 1s
+    (( __counter++ ))
+  done
+  printf "%b" "\n"
+}
+
+function ssh_image()
+{
+  if port_available
+  then ssh pi@localhost -p $PORT -o UserKnownHostsFile=/dev/null -o NoHostAuthenticationForLocalhost=yes
+  else echo "port 5022 not available, confirm with status if the machine is running" >&2; return 1
+  fi
+}
+
+function usage()
+{
+  echo "$0 [start_ssh|start|stop|status|wait_ssh|ssh|usage]"
+}
+
+case "${1:-}" in
+  (wait_ssh)
+    wait_for 60 ssh_image
+    ;;
+  (start_ssh)
+    image_running  || start_image
+    port_available || wait_for 60 port_available
+    wait_for 60 ssh_image
+    ;;
+  (start)
+    image_running || start_image
+    ;;
+  (stop)
+    image_running && stop_image
+    ;;
+  (status)
+    show_status
+    image_running
+    ;;
+  (ssh)
+    ssh_image
+    ;;
+  (usage)
+    usage
+    ;;
+  (*)
+    show_status
+    usage
+    ;;
+esac
