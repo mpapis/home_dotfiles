@@ -36,19 +36,20 @@ report_status()
   fi
 }
 
-function make_sure_swap_img_exist()
+function make_sure_img_exist()
 {
-  [[ -f /dev/shm/swap-${IMAGE##*/} ]] || {
-    echo "Swap missing - creating"
-    qemu-img create /dev/shm/swap-${IMAGE##*/} 2G
-    mkswap /dev/shm/swap-${IMAGE##*/}
-    echo "Swap created"
+  [[ -f /dev/shm/$1-${IMAGE##*/} ]] || {
+    echo "Disk image '$1' missing - creating"
+    qemu-img create /dev/shm/$1-${IMAGE##*/} $2
+    mkswap /dev/shm/$1-${IMAGE##*/}
+    echo "Disk image '$1' created"
   }
 }
 
 function start_image()
 {
-  make_sure_swap_img_exist
+  make_sure_img_exist swap 2G
+  make_sure_img_exist data 8G
   echo "Starting image"
   qemu-system-arm \
     -cpu $CPU \
@@ -58,6 +59,7 @@ function start_image()
     -append "root=/dev/sda2 panic=1" \
     -hda $IMAGE \
     -hdb /dev/shm/swap-${IMAGE##*/} \
+    -hdc /dev/shm/data-${IMAGE##*/} \
     -redir tcp:$PORT::22 \
     -ctrl-grab \
     -no-reboot \
