@@ -49,7 +49,7 @@ function make_sure_img_exist()
         mkswap $3
         ;;
       (*)
-        mkfs -t $1 $3
+        mkfs -F -t $1 $3
         ;;
     esac
     report_status "creating image '$3'" $? || return $?
@@ -58,25 +58,35 @@ function make_sure_img_exist()
 
 function start_image()
 {
+  typeset -a __command __flags
   make_sure_img_exist swap 2G /dev/shm/swap-${IMAGE##*/}
-  make_sure_img_exist ext4 8G data-${IMAGE##*/}
+  make_sure_img_exist ext4 8G data.img
   echo "Starting image"
-  qemu-system-arm \
-    -cpu $CPU \
-    -m $RAM \
-    -M versatilepb \
-    -kernel kernel-qemu \
-    -append "root=/dev/sda2 panic=1" \
-    -hda $IMAGE \
-    -hdb /dev/shm/swap-${IMAGE##*/} \
-    -hdc data-${IMAGE##*/} \
-    -redir tcp:$PORT::22 \
-    -ctrl-grab \
-    -no-reboot \
-    -daemonize \
-    -localtime \
-    -display none
+  __command=(
+    qemu-system-arm
+    -cpu $CPU -m $RAM
+    -hda $IMAGE -hdb /dev/shm/swap-${IMAGE##*/} -hdc data.img
+    -append "root=/dev/sda2 panic=1"
+    -kernel kernel-qemu -M versatilepb
+    -redir tcp:$PORT::22 -no-reboot
+    -rtc base=localtime,clock=host,driftfix=slew
+  )
+  if [[ " $* " =~ " gui " ]]
+  then __command+=( -ctrl-grab )
+  else __command+=( -display none )
+  fi
+  if [[ " $* " =~ " console " ]]
+  then __command+=( -serial stdio )
+  else __command+=( -daemonize )
+  fi
+  "${__command[@]}"
   report_status "starting image" $? || return $?
+  if
+    [[ " $* " =~ " ssh " ]]
+  then
+    wait_for 180 ssh_available
+    ssh_image
+  fi
 }
 
 function stop_image()
@@ -118,6 +128,11 @@ function show_status()
   fi
 }
 
+function ssh_available()
+{
+  ssh pi@localhost -p $PORT -o UserKnownHostsFile=/dev/null -o NoHostAuthenticationForLocalhost=yes -q true
+}
+
 function port_available()
 {
   netstat -tln 2>/dev/null | grep "0.0.0.0:$PORT" > /dev/null
@@ -125,19 +140,18 @@ function port_available()
 
 function wait_for()
 {
-  typeset __counter=0
   typeset __timeout=$1
   shift
   printf "Waiting ${__timeout}s for $*"
+  __timeout=$(( __timeout + $( date +%s )  ))
   while
-    (( __counter < __timeout ))
+    (( __timeout > $( date +%s ) ))
   do
     printf "%b" "."
     if "$@"
     then break
     fi
     sleep 1s
-    (( __counter++ ))
   done
   printf "%b" "\n"
 }
@@ -148,11 +162,6 @@ function ssh_image()
   then ssh pi@localhost -p $PORT -o UserKnownHostsFile=/dev/null -o NoHostAuthenticationForLocalhost=yes
   else echo "port 5022 not available, confirm with status if the machine is running" >&2; return 1
   fi
-}
-
-function ssh_copy_id_to_image()
-{
-  ssh-copy-id "pi@localhost -p $PORT -o UserKnownHostsFile=/dev/null -o NoHostAuthenticationForLocalhost=yes"
 }
 
 function scp_image()
@@ -187,7 +196,7 @@ function prepare_variables()
 
 function prepare_target()
 {
-  typeset target_dir="${1:-$image_name}"
+  export target_dir="${1:-$image_name}"
   echo "target_dir => $target_dir"
   mkdir -p "$target_dir"
   cd "$target_dir"
@@ -216,8 +225,9 @@ function prepare_download()
     big_fail "Failed downloading package / verifying checksum, aborting, try again later."
   fi
   [[ -f kernel-qemu ]] || {
-    curl -LO http://xecdesign.com/downloads/linux-qemu/kernel-qemu ||
-    big_fail "Failed downloading kernel, aborting, try again later."
+    echo "Downloading kernel-qemu"
+    curl -sSLO http://xecdesign.com/downloads/linux-qemu/kernel-qemu
+    report_status "downloading kernel" $?
   }
 }
 
@@ -244,6 +254,7 @@ function prepare_manipulate_images()
     sudo mount -t ext4      ${IMAGE}     temp_root -o offset=62914560
     sudo mount -t ext4 data-${IMAGE##*/} temp_data
     sudo sed -i'' "s/^\(.*\)$/#\1/" temp_root/etc/ld.so.preload
+    sudo rm temp_root/etc/rc*.d/*fake-hwclock
     mv temp_root/home/pi/* temp_root/home/pi/.[a-z]* temp_data/
     (
       sudo mkdir -p temp_data/.ssh
@@ -261,22 +272,36 @@ function prepare_manipulate_images()
   rm -rf temp_root temp_data
 }
 
+function prepare_info()
+{
+  echo "
+To start using new image run:
+
+    cd $target_dir
+    myarm start_ssh
+"
+  usage
+}
+
 function prepare()
 {
   typeset image_uri image_zip image_name
+
+  sudo /bin/true
 
   prepare_variables "$1" &&
   prepare_target    "$2" &&
   prepare_download &&
   prepare_extract  &&
   prepare_manipulate_images
-  report_status "manipulating image" $?
+  report_status "manipulating images" $? &&
+  prepare_info
 }
 
 function usage()
 {
-  echo "$0 [start_ssh|start|stop|status|wait_ssh|ssh|ssh-copy-id|scp|prepare|usage]"
-  echo "For myarm scp use 'pi@localhost' as the remote machine"
+  echo "Usage: $0 [prepare [URL [name]]|start [ssh|gui|console]|stop|status|wait_ssh|ssh|scp ...|usage]"
+  echo "For 'myarm scp' use 'pi@localhost' as the remote machine"
 }
 
 case "${1:-}" in
@@ -284,15 +309,10 @@ case "${1:-}" in
     load_dot_myarm
     wait_for 60 ssh_image
     ;;
-  (start_ssh)
-    load_dot_myarm
-    image_running  || start_image
-    port_available || wait_for 60 port_available
-    wait_for 60 ssh_image
-    ;;
   (start)
     load_dot_myarm
-    image_running || start_image
+    shift
+    image_running || start_image "$@"
     ;;
   (stop)
     load_dot_myarm
@@ -311,10 +331,6 @@ case "${1:-}" in
   (ssh)
     load_dot_myarm
     ssh_image
-    ;;
-  (ssh-copy-id)
-    load_dot_myarm
-    ssh_copy_id_to_image
     ;;
   (scp)
     load_dot_myarm
