@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+function go()
+{
+  echo "$*"
+  "$@" || return $?
+}
+
+function set_cores_online()
+{
+  typeset core=1
+  while
+    [[ -f /sys/devices/system/cpu/cpu${core}/online ]]
+  do
+    echo -n ${1:-1} | sudo tee /sys/devices/system/cpu/cpu${core}/online >/dev/null
+    : $((core++ ))
+  done
+}
+
+function no_turbo()
+{
+  echo -n ${1:-1} | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo >/dev/null
+}
+
+function run_slow()
+{
+  go no_turbo 1
+  go set_cores_online 0
+  go set_cores_online 1
+  go no_turbo 0
+  run_mhz
+}
+
+function run_mhz()
+{
+  grep MHz /proc/cpuinfo
+}
+
+function run_help()
+{
+  cat <<-MESSAGE
+Usage: cpu [help|mhz|slow]
+- help - show this message
+- mhz  - show all running processors speed
+- slow - slow down for broken intel p-state
+MESSAGE
+  return ${1:-0}
+}
+
+case "${1:-}" in
+  (help|mhz|slow)
+    run_$1
+    ;;
+  (*)
+    run_help 1
+    ;;
+esac
