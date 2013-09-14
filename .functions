@@ -79,7 +79,7 @@ gwm()
 }
 gwmpush()
 {
-  gwm pull $@ && git pull $@ && gwm push && git push
+  gwm pull $@ && git pull && git pull bitbucket master $@ && gwm push && git push && git push bitbucket master
 }
 gpp()
 {
