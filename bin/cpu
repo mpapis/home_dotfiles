@@ -24,10 +24,12 @@ function no_turbo()
 
 function run_slow()
 {
+  go set_governor performance
   go no_turbo 1
   go set_cores_online 0
   go set_cores_online 1
   go no_turbo 0
+  go set_governor powersave
   run_mhz
 }
 
@@ -36,20 +38,47 @@ function run_mhz()
   grep MHz /proc/cpuinfo
 }
 
+show_governor()
+{
+  cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+}
+
+set_governor()
+{
+  echo -n $1 | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor >/dev/null
+}
+
+function run_gov()
+{
+  case "$1" in
+    ("")
+      show_governor
+      ;;
+    (powersave|performance)
+      go set_governor $1
+      run_mhz
+      ;;
+    (*)
+      echo "Unknown parameter '$1', only performance and powersave is supported."
+      ;;
+  esac
+}
+
 function run_help()
 {
   cat <<-MESSAGE
-Usage: cpu [help|mhz|slow]
+Usage: cpu [help|mhz|slow|gov]
 - help - show this message
 - mhz  - show all running processors speed
 - slow - slow down for broken intel p-state
+- gov  - display / set governor [powersave|performance]
 MESSAGE
   return ${1:-0}
 }
 
 case "${1:-}" in
-  (help|mhz|slow)
-    run_$1
+  (help|mhz|slow|gov)
+    run_$1 $2
     ;;
   (*)
     run_help 1
