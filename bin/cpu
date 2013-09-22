@@ -46,8 +46,8 @@ function run_mhz()
 function run_status()
 {
   run_mhz
-  echo -e "governor\t: $(show_governor|head -n 1)"
-  echo -e "no_turbo\t: $(show_no_turbo|head -n 1)"
+  echo -e "governor\t: $(show_governor|sort -u)"
+  echo -e "no_turbo\t: $(show_no_turbo|sort -u)"
 }
 
 show_governor()
