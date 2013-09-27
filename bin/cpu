@@ -29,10 +29,18 @@ function show_no_turbo()
 
 function run_slow()
 {
-  go set_governor performance
+  go set_governor powersave
   go no_turbo 1
   go set_cores_online 0
+  go sleep 1s
   go set_cores_online 1
+  go no_turbo 0
+  run_mhz
+}
+
+function run_fast()
+{
+  go set_governor performance
   go no_turbo 0
   go set_governor powersave
   run_mhz
@@ -84,13 +92,14 @@ Usage: cpu [help|mhz|status|slow|gov]
 - mhz    - show all running processors speed
 - status - show some numbers
 - slow   - slow down for broken intel p-state
+- fast   - speed up  for broken intel p-state
 - gov    - display / set governor [powersave|performance]
 MESSAGE
   return ${1:-0}
 }
 
 case "${1:-}" in
-  (help|mhz|status|slow|gov)
+  (help|mhz|status|slow|fast|gov)
     run_$1 $2
     ;;
   (*)
