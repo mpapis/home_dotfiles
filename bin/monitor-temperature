@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+sensors coretemp-isa-0000 | awk '/Physical id 0:/ {print "CPU "$4}' | sed -e 's/\.0//' -e 's/ +/ /'
+
+sensors nouveau-pci-0100 | awk '/temp1:/ {print "VGA "$2}' | sed -e 's/\.0//' -e 's/ +/ /'
+
+telnet 127.0.0.1 7634 2>/dev/null | awk 'END{print}' | sed -e 's/||/|\n|/' -e 's#/dev/##g' | awk -F'|' '{print toupper($2)" "$4"°"$5}'

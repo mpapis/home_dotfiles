@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+read last_date last_idle < /dev/shm/.uptime.save
+read curr_date curr_idle < /proc/uptime
+cat /proc/uptime > /dev/shm/.uptime.save
+cpu_cores=`awk '/MHz/ {x+=1} END {print x}' </proc/cpuinfo`
+cpu_usage=`bc <<<"100 - (($curr_idle - $last_idle) * 100 / ($curr_date - $last_date) / $cpu_cores)"`
+echo "CPU: ${cpu_usage}%"
+
+awk 'BEGIN{min=5000} /cpu MHz/{if ($4<min) min=$4 ; if($4>max) max=$4;} END{printf "CPU: %0.1f-%0.1f GHz\n", min/1000, max/1000}' < /proc/cpuinfo | sed -e 's/\.000//g'
+
+free -h | awk '/Mem/{max=$2} /+ buffers/{curr=$3} END{print "RAM: "curr"B/"max"B"}'
