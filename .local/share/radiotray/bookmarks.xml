@@ -94,7 +94,7 @@
 	<bookmark name="Punk" url="http://www.polskastacja.pl/play/aac_punk.pls"/>
 	<bookmark name="Premiery i Nowosci Muzyczne" url="http://www.polskastacja.pl/play/aac_premiery.pls"/>
 	<bookmark name="Indie Rock" url="http://www.polskastacja.pl/play/aac_indie.pls"/>
-    </group>
+    <bookmark name="Eska Rock" url="http://s5.deb1.scdn.smcloud.net/t041-1.aac"/></group>
     <group name="PolskaStacja - Nowosci">
 	<bookmark name="HOT 100 - Goraca Setka Nowosci." url="http://www.polskastacja.pl/play/aac_hot100.pls"/>
 	<bookmark name="Muzyka Na TOPIE" url="http://www.polskastacja.pl/play/aac_mnt.pls"/>
@@ -227,5 +227,5 @@
     <bookmark name="ravetrax" url="http://www.ravetrax.com/mp3_mid.pls"/>
     <bookmark name="psych0tik" url="http://kissy.psych0tik.net:8000/psych0tik.ogg"/>
     <bookmark name="soma.fm - groovesalad" url="http://somafm.com/startstream=groovesalad.pls"/>
-</group>
+<bookmark name="deephouselounge" url="http://198.15.94.34:2199/tunein/deephouselounge.pls"/><group name="Eska"><bookmark name="Polski Rock" url="http://acdn.smcloud.net/t008-1_mp3.pls"/></group></group>
 </bookmarks>
