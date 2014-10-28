@@ -1,6 +1,7 @@
 [user]
 	name = Michal Papis
 	email = mpapis@gmail.com
+	signingkey = BF04FF17
 [dir]
 [color]
 	ui = auto
@@ -20,3 +21,5 @@
 	commitmsgwidth = 72
 [pre-commit]
 	test2 = 5
+[commit]
+	gpgsign = true
