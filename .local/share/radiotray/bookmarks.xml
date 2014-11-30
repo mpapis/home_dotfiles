@@ -232,5 +232,9 @@
       <bookmark name="psych0tik" url="http://kissy.psych0tik.net:8000/psych0tik.ogg"/>
       <bookmark name="soma.fm - groovesalad" url="http://somafm.com/startstream=groovesalad.pls"/>
     </group>
+    <group name="spanish">
+      <bookmark name="Chanquete FM" url="http://92.48.107.35:8008/listen.pls"/>
+      <bookmark name="Latino FM" url="http://92.48.107.35:8000/listen.pls"/>
+    </group>
   </group>
 </bookmarks>
