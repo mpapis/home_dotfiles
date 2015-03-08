@@ -22,6 +22,28 @@ function no_turbo()
   echo -n ${1:-1} | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo >/dev/null
 }
 
+function run_turbo()
+{
+  case "$1" in
+    (on|enable)
+      no_turbo 0
+      ;;
+    (off|disable)
+      no_turbo 1
+      ;;
+    (*)
+      case "$(show_no_turbo)" in
+        (0)
+          echo enabled
+          ;;
+        (1)
+          echo diabled
+          ;;
+      esac
+      ;;
+  esac
+}
+
 function show_no_turbo()
 {
   cat /sys/devices/system/cpu/intel_pstate/no_turbo
@@ -34,7 +56,6 @@ function run_slow()
   go set_cores_online 0
   go sleep 1s
   go set_cores_online 1
-  go no_turbo 0
   run_mhz
 }
 
@@ -42,7 +63,6 @@ function run_fast()
 {
   go set_governor performance
   go no_turbo 0
-  go set_governor powersave
   run_mhz
 }
 
@@ -87,19 +107,20 @@ function run_gov()
 function run_help()
 {
   cat <<-MESSAGE
-Usage: cpu [help|mhz|status|slow|gov]
+Usage: cpu [help|mhz|status|slow|gov|turbo]
 - help   - show this message
 - mhz    - show all running processors speed
 - status - show some numbers
 - slow   - slow down for broken intel p-state
 - fast   - speed up  for broken intel p-state
 - gov    - display / set governor [powersave|performance]
+- turbo  - display / set turbo mode [on|off]
 MESSAGE
   return ${1:-0}
 }
 
 case "${1:-}" in
-  (help|mhz|status|slow|fast|gov)
+  (help|mhz|status|slow|fast|gov|turbo)
     run_$1 $2
     ;;
   (*)
