@@ -55,13 +55,42 @@ function switch_sink()
   switch_sink_kmix_master  "$@"
 }
 
+# Use a zenity gui to switch audio outputs
+function switch_gui()
+{
+# get current output id, all output ids and the sink names
+   current_id=$(pacmd list-sinks | egrep '\* index:' | egrep -o '[0-9]+$')
+   ids=( $(pacmd list-sinks | egrep 'index:' | egrep -o '[0-9]+$' | tr '\n' ' ') )
+   names=( $(pacmd list-sinks | egrep 'name:' | egrep -o '\..*>$' | tr -d '>' | tr '\n' ' ') )
+
+   zen_pars="--list --radiolist --column '' --column 'ID' --column 'Sink_name'"
+
+# construct the zenity command
+   for i in "${!ids[@]}"
+   do
+      if [ ${ids[$i]} = $current_id ]; then
+         zen_pars="$zen_pars TRUE"
+      else
+         zen_pars="$zen_pars FALSE"
+      fi
+      zen_pars="$zen_pars ${ids[$i]} ${names[$i]}"
+   done
+
+# change the audio sink with the switch_sink function
+   new_sink_id=$(zenity $zen_pars || echo "")
+   if [ -n $new_sink_id ]; then
+      switch_sink $new_sink_id
+   fi
+}
+
 function help_me()
 {
-  echo "Usage: $0 [|list|<sink name to switch to>]"
+  echo "Usage: $0 [gui|list|<sink name to switch to>]"
 }
 
 case "${1:-}" in
   (""|list) list_sinks       ;;
   ([0-9]*)  switch_sink "$@" ;;
+  (gui)     switch_gui       ;;
   (*)       help_me          ;;
 esac
