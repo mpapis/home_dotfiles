@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+set -e
+
+test -d "$HOME/.gem/bundler" || GEM_HOME="$HOME/.gem/bundler" gem install bundler --no-document --minimal-deps
+
+GEM_PATH="$HOME/.gem/bundler:$GEM_PATH" "$HOME/.gem/bundler/bin/bundle" "$@" || return $?
