@@ -8,4 +8,5 @@ alias g+="git add"
 alias g-="git rm"
 alias gr="git remote -v"
 alias gc-="git checkout --"
-alias m="mplayer2 --use-filename-title"
+alias m=open
+alias open=xdg-open
