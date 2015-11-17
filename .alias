@@ -8,5 +8,5 @@ alias g+="git add"
 alias g-="git rm"
 alias gr="git remote -v"
 alias gc-="git checkout --"
-alias m=open
+alias m=totem
 alias open=xdg-open
