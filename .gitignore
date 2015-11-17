@@ -9,6 +9,7 @@
 !\.gemrc
 !\.gitconfig
 !\.gitignore
+!\.gitignore_global
 !\.profile
 !\.vimrc
 !\download
