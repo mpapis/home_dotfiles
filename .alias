@@ -8,5 +8,5 @@ alias g+="git add"
 alias g-="git rm"
 alias gr="git remote -v"
 alias gc-="git checkout --"
-alias m=totem
+alias m="mplayer2 --use-filename-title --osdlevel=3 --ontop --vo=xv"
 alias open=xdg-open
