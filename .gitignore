@@ -15,6 +15,7 @@
 !\download
 !\bin
 !\bin/*
+bin/extundelete
 !\.local
 !\.local/share
 !\.local/share/radiotray
