@@ -8,5 +8,5 @@ alias g+="git add"
 alias g-="git rm"
 alias gr="git remote -v"
 alias gc-="git checkout --"
-alias m="mpv --title='\${filename}' --osd-level=3 --ontop --vo=xv"
 alias open=xdg-open
+alias jb="JRUBY_OPTS=--dev bundle"

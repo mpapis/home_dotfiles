@@ -14,6 +14,7 @@ else EDITOR=vim
 fi
 LESS="-M -i -R"
 USE_BUNDLER=try
+JRUBY_OPTS="--dev -G"
 
 for script in ~/.alias ~/.functions ~/.shrc.local
 do [[ -s $script ]] && source $script || true
