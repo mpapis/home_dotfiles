@@ -10,3 +10,4 @@ alias gr="git remote -v"
 alias gc-="git checkout --"
 alias open=xdg-open
 alias jb="JRUBY_OPTS=--dev bundle"
+alias router="ssh -fY papis-router.local xfce4-terminal"
