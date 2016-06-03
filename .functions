@@ -245,11 +245,11 @@ function edit_variable() {
 __setup_ssh_agent()
 {
   typeset agent_file
-  agent_file=~/.ssh-agent-config
+  agent_file="$HOME/.ssh/agent-$HOSTNAME"
 
   # check if already loaded
   if
-    [[ -n "$SSH_AGENT_PID" ]] && ps -p $SSH_AGENT_PID | grep ssh-agent >/dev/null
+    [[ -n "$SSH_AGENT_PID" ]] && ps -p "$SSH_AGENT_PID" | grep "ssh-agent" >/dev/null
   then
     # check if agent file is up to date
     if
@@ -257,7 +257,7 @@ __setup_ssh_agent()
       ! grep -q SSH_AUTH_SOCK=$SSH_AUTH_SOCK $agent_file
     then
       # update it if needed
-      env | grep -E 'SSH_AGENT_PID=|SSH_AUTH_SOCK=' > $agent_file
+      env | grep -E 'SSH_AGENT_PID=|SSH_AUTH_SOCK=' | sed 's/^/export /' > $agent_file
     fi
     # skip initialization
     return 0
