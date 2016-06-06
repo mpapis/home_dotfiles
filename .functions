@@ -77,6 +77,14 @@ m()
 {
   mpv --ontop --title '${filename}' --osd-level=3 "$@"
 }
+ml()
+{
+  while [[ $# > 0 ]]
+  do
+    echo "$1# $(ffmpeg -i "$1" 2>&1 | grep Duration)"
+    shift
+  done | column -s"#" -t
+}
 grm()
 {
   git rebase master
