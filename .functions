@@ -261,8 +261,7 @@ __setup_ssh_agent()
   then
     # check if agent file is up to date
     if
-      ! grep -q SSH_AGENT_PID=$SSH_AGENT_PID $agent_file ||
-      ! grep -q SSH_AUTH_SOCK=$SSH_AUTH_SOCK $agent_file
+      ! grep -q SSH_AGENT_PID=$SSH_AGENT_PID $agent_file
     then
       # update it if needed
       env | grep -E 'SSH_AGENT_PID=|SSH_AUTH_SOCK=' | sed 's/^/export /' > $agent_file
