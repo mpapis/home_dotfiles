@@ -75,7 +75,22 @@ d()
 }
 m()
 {
-  mpv --ontop --title '${filename}' --osd-level=3 "$@"
+  typeset -a args
+  while [[ -n "$1" ]]
+  do
+    if [[ -f "$1" ]]
+    then filename="$1"
+    else args+=( "$1" )
+    fi
+    shift
+  done
+  if
+    [[ -f "${filename}.part" ]]
+  then
+    mpv --ontop --title "${filename}" --osd-level=3 "${args[@]}" "${filename}.part"
+  else
+    mpv --ontop --title "${filename}" --osd-level=3 "${args[@]}" "${filename}"
+  fi
 }
 ml()
 {
@@ -358,4 +373,8 @@ decrypt()
 {
   encfs $PWD/.${1%/}-encrypted/ $PWD/$1 &&
   cd $1
+}
+fixblue()
+{
+  bluetoothctl <<<"power off" && sudo hciconfig hci0 up
 }
