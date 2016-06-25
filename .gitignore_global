@@ -1,3 +1,4 @@
 .idea
 .private
 .fuse_hidden*
+.env.*
