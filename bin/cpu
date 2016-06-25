@@ -74,18 +74,22 @@ function run_mhz()
 function run_status()
 {
   run_mhz
+  echo -e "temperature\t: $(run_temp|sort -u)"
   echo -e "governor\t: $(show_governor|sort -u)"
   echo -e "no_turbo\t: $(show_no_turbo|sort -u)"
 }
 
 show_governor()
 {
-  cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+  cat /sys/devices/system/cpu/cpu[0-9]*/cpufreq/scaling_governor
 }
 
 set_governor()
 {
-  echo -n $1 | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor >/dev/null
+  for cpu in /sys/devices/system/cpu/cpu[0-9]*
+  do
+    echo -n $1 | sudo tee $cpu/cpufreq/scaling_governor >/dev/null
+  done
 }
 
 function run_gov()
@@ -104,6 +108,12 @@ function run_gov()
   esac
 }
 
+function run_temp()
+{
+  temp="$(cat "/sys/devices/platform/coretemp.0/hwmon/hwmon1/temp1_input")"
+  bc <<<"$temp.0/1000.0"
+}
+
 function run_help()
 {
   cat <<-MESSAGE
@@ -115,12 +125,13 @@ Usage: cpu [help|mhz|status|slow|gov|turbo]
 - fast   - speed up  for broken intel p-state
 - gov    - display / set governor [powersave|performance]
 - turbo  - display / set turbo mode [on|off]
+- temp   - show cpu temperature
 MESSAGE
   return ${1:-0}
 }
 
 case "${1:-}" in
-  (help|mhz|status|slow|fast|gov|turbo)
+  (help|mhz|status|slow|fast|gov|turbo|temp)
     run_$1 $2
     ;;
   (*)
