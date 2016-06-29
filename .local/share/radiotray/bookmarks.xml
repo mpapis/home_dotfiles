@@ -168,35 +168,9 @@
 	<bookmark name="Muzyka Ludowa" url="http://www.polskastacja.pl/play/aac_muzykaludowa.pls"/>
 	<bookmark name="Biesiada Slaska" url="http://www.polskastacja.pl/play/aac_biesiadaslaska.pls"/>
     </group>
-    <group name="PolskaStacja - Reggae">
-	<bookmark name="W rytmie REGGAE" url="http://www.polskastacja.pl/play/aac_reggae.pls"/>
-	<bookmark name="Polskie Reggae" url="http://www.polskastacja.pl/play/aac_polskiereggae.pls"/>
-    </group>
-    <group name="PolskaStacja - Religijne">
-	<bookmark name="CCM - Contemporary Christian" url="http://www.polskastacja.pl/play/aac_ccm.pls"/>
-	<bookmark name="Polska Muzyka Chrzescijanska" url="http://www.polskastacja.pl/play/aac_chrzescijanska.pls"/>
-    </group>
-    <group name="PolskaStacja - Swiat">
-	<bookmark name="Muzyka Francuska" url="http://www.polskastacja.pl/play/aac_francja.pls"/>
-	<bookmark name="Etno POP" url="http://www.polskastacja.pl/play/aac_etnopop.pls"/>
-	<bookmark name="ITALIA" url="http://www.polskastacja.pl/play/aac_italia.pls"/>
-	<bookmark name="Country" url="http://www.polskastacja.pl/play/aac_country.pls"/>
-	<bookmark name="Latino" url="http://www.polskastacja.pl/play/aac_latino.pls"/>
-	<bookmark name="EDEN (New Age &amp; World Music)" url="http://www.polskastacja.pl/play/aac_eden.pls"/>
-	<bookmark name="Bollywood" url="http://www.polskastacja.pl/play/aac_bollywood.pls"/>
-    </group>
     <group name="PolskaStacja - Klasyka">
 	<bookmark name="Klasycznie" url="http://www.polskastacja.pl/play/aac_klas.pls"/>
 	<bookmark name="Muzyka filmowa" url="http://www.polskastacja.pl/play/aac_film.pls"/>
-    </group>
-    <group name="PolskaStacja - Film">
-	<bookmark name="Piosenki z Filmow" url="http://www.polskastacja.pl/play/aac_piosenkifilmowe.pls"/>
-	<bookmark name="Muzyka filmowa" url="http://www.polskastacja.pl/play/aac_film.pls"/>
-	<bookmark name="Bollywood" url="http://www.polskastacja.pl/play/aac_bollywood.pls"/>
-    </group>
-    <group name="PolskaStacja - Jazz">
-	<bookmark name="Smooth Jazz" url="http://www.polskastacja.pl/play/aac_smoothjazz.pls"/>
-	<bookmark name="JAZZ" url="http://www.polskastacja.pl/play/aac_jazz.pls"/>
     </group>
     <group name="PolskaStacja - Relaks">
 	<bookmark name="Przeboje We Dwoje" url="http://www.polskastacja.pl/play/aac_love.pls"/>
@@ -220,17 +194,8 @@
 	<bookmark name="Latino" url="http://www.polskastacja.pl/play/aac_latino.pls"/>
 	<bookmark name="EDEN (New Age &amp; World Music)" url="http://www.polskastacja.pl/play/aac_eden.pls"/>
     </group>
-    <group name="di.fm">
-      <bookmark name="Hard Dance" url="http://listen.di.fm/public3/harddance.pls"/>
-      <bookmark name="Trance" url="http://www.di.fm/mp3/trance128k.pls"/>
-    </group>
     <group name="Eska">
       <bookmark name="Rock Polska" url="http://s5.deb1.scdn.smcloud.net/t008-1.mp3.m3u"/>
-    </group>
-    <group name="Inne">
-      <bookmark name="ravetrax" url="http://www.ravetrax.com/mp3_mid.pls"/>
-      <bookmark name="psych0tik" url="http://kissy.psych0tik.net:8000/psych0tik.ogg"/>
-      <bookmark name="soma.fm - groovesalad" url="http://somafm.com/startstream=groovesalad.pls"/>
     </group>
     <group name="spanish">
       <bookmark name="Chanquete FM" url="http://92.48.107.35:8008/listen.pls"/>
