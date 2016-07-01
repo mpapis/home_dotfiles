@@ -371,8 +371,11 @@ then
 fi
 decrypt()
 {
-  encfs $PWD/.${1%/}-encrypted/ $PWD/$1 &&
-  cd $1
+  dir="$(cd "$(dirname "${1:-$PWD}")" && pwd)"
+  name="${1%/}"
+  name="${name##*/}"
+  encfs "$dir/.${name}-encrypted/" "$dir/$name" &&
+  cd "$1"
 }
 fixblue()
 {
