@@ -371,11 +371,17 @@ then
 fi
 decrypt()
 {
-  dir="$(cd "$(dirname "${1:-$PWD}")" && pwd)"
+  dir="$(cd "$(dirname "${1:-$PWD}")" && pwd)" #"
   name="${1%/}"
   name="${name##*/}"
-  encfs "$dir/.${name}-encrypted/" "$dir/$name" &&
-  cd "$1"
+  if
+    mount | grep -q "$dir/$name"
+  then
+    cd "$1"
+  else
+    encfs "$dir/.${name}-encrypted/" "$dir/$name" &&
+    cd "$1"
+  fi
 }
 fixblue()
 {
