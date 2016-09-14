@@ -2,3 +2,4 @@
 .private
 .fuse_hidden*
 .env.*
+.byebug_history
