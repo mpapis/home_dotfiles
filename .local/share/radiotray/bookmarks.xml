@@ -12,6 +12,7 @@
     <bookmark name="DJ TOP 50" url="http://www.polskastacja.pl/play/aac_djtop50.pls"/>
     <bookmark name="Polski Power Dance" url="http://www.polskastacja.pl/play/aac_powerdance.pls"/>
   </group>
+  <group name="PolskaStacja">
     <group name="PolskaStacja - NOWE">
 	<bookmark name="Dance 100" url="http://www.polskastacja.pl/play/aac_dance100.pls"/>
 	<bookmark name="Bollywood" url="http://www.polskastacja.pl/play/aac_bollywood.pls"/>
@@ -194,12 +195,14 @@
 	<bookmark name="Latino" url="http://www.polskastacja.pl/play/aac_latino.pls"/>
 	<bookmark name="EDEN (New Age &amp; World Music)" url="http://www.polskastacja.pl/play/aac_eden.pls"/>
     </group>
-    <group name="Eska">
-      <bookmark name="Rock Polska" url="http://s5.deb1.scdn.smcloud.net/t008-1.mp3.m3u"/>
-    </group>
-    <group name="spanish">
-      <bookmark name="Chanquete FM" url="http://92.48.107.35:8008/listen.pls"/>
-      <bookmark name="Latino FM" url="http://92.48.107.35:8000/listen.pls"/>
-    </group>
   </group>
+  <group name="Eska">
+    <bookmark name="Radio GO" url="http://waw03.ic1.scdn.smcloud.net/t032-1.mp3"/>
+    <bookmark name="Rock Polska" url="http://s5.deb1.scdn.smcloud.net/t008-1.mp3"/>
+  </group>
+  <group name="spanish">
+    <bookmark name="Chanquete FM" url="http://92.48.107.35:8008/listen.pls"/>
+    <bookmark name="Latino FM" url="http://92.48.107.35:8000/listen.pls"/>
+  </group>
+</group>
 </bookmarks>
