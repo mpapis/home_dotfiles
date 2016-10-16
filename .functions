@@ -385,5 +385,8 @@ decrypt()
 }
 fixblue()
 {
-  bluetoothctl <<<"power off" && sudo hciconfig hci0 up
+  #ubuntu
+  # bluetoothctl <<<"power off" && sudo hciconfig hci0 up
+  #opensuse
+  sudo /usr/sbin/modprobe -r btusb && sudo /usr/sbin/modprobe btusb
 }
