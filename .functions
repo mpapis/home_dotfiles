@@ -388,5 +388,5 @@ fixblue()
   #ubuntu
   # bluetoothctl <<<"power off" && sudo hciconfig hci0 up
   #opensuse
-  sudo /usr/sbin/modprobe -r btusb && sudo /usr/sbin/modprobe btusb
+  sudo /usr/sbin/modprobe -r btusb && sleep 1 && sudo /usr/sbin/modprobe btusb
 }
