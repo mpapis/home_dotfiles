@@ -11,4 +11,4 @@ alias gc-="git checkout --"
 alias open=xdg-open
 alias jb="JRUBY_OPTS=--dev bundle"
 alias router="ssh -fY papis-router.local xfce4-terminal"
-alias s2ram="sudo /usr/lib/systemd/systemd-sleep suspend"
+alias s2ram="(/usr/lib64/libexec/kscreenlocker_greet &) ; sleep 0.5 ; sudo /usr/lib/systemd/systemd-sleep suspend"
