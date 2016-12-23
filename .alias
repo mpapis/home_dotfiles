@@ -8,6 +8,7 @@ alias g+="git add"
 alias g-="git rm"
 alias gr="git remote -v"
 alias gc-="git checkout --"
+alias grm="git checkout master && git pull && git checkout - && git rebase master"
 alias open=xdg-open
 alias jb="JRUBY_OPTS=--dev bundle"
 alias router="ssh -fY papis-router.local xfce4-terminal"

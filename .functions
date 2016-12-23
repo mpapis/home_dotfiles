@@ -100,10 +100,6 @@ ml()
     shift
   done | column -s"#" -t
 }
-grm()
-{
-  git rebase master
-}
 gri()
 {
   git rebase --interactive "$@"
