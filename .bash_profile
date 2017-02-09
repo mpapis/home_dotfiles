@@ -25,7 +25,7 @@ else
   }
 fi
 
-for script in "${sm_path:-/opt/sm/}/core/sm/shell/project/interactive" "${rvm_path:-$HOME/.rvm}/scripts/completion"
+for script in "${sm_path:-/opt/sm/}/core/sm/shell/project/interactive" "${rvm_path:-$HOME/.rvm}/scripts/completion" "$HOME/projects/owned/privatecd/privatecd.sh"
 do
-  [[ -s "$1" ]] && source "$1" || true
+  [[ -s "$script" ]] && source "$script" || true
 done
