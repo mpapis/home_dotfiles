@@ -114,7 +114,7 @@ gpp()
 }
 gpf()
 {
-  git push -f
+  git push --force-with-lease
 }
 gcaa()
 {
