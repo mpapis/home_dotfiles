@@ -1,5 +1,6 @@
 alias r=rails
 alias grep='grep --color'
+alias ls='ls --color'
 alias "g?=git status"
 alias "g??=git diff"
 alias "g=git status; git diff"
