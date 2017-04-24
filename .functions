@@ -76,6 +76,7 @@ d()
 m()
 {
   typeset -a args
+  typeset filename
   while [[ -n "$1" ]]
   do
     if [[ -f "$1" ]]
@@ -87,16 +88,21 @@ m()
   if
     [[ -f "${filename}.part" ]]
   then
-    mpv --ontop --title "${filename}" --osd-level=3 "${args[@]}" "${filename}.part"
+    mpv --ontop --title "${filename}" "${args[@]}" "${filename}.part" # --osd-level=3
   else
-    mpv --ontop --title "${filename}" --osd-level=3 "${args[@]}" "${filename}"
+    mpv --ontop --title "${filename}" "${args[@]}" "${filename}"      # --osd-level=3
   fi
 }
 ml()
 {
+  typeset filename
   while [[ $# > 0 ]]
   do
-    echo "$1# $(ffmpeg -i "$1" 2>&1 | grep Duration)"
+    filename="$1"
+    if [[ -f "$1.part" ]]
+    then filename+=".part"
+    fi
+    echo "$1# $(ffmpeg -i "$filename" 2>&1 | grep Duration)"
     shift
   done | column -s"#" -t
 }
