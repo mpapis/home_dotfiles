@@ -13,5 +13,4 @@ alias grm="git checkout master && git pull && git checkout - && git rebase maste
 alias open=xdg-open
 alias jb="JRUBY_OPTS=--dev bundle"
 alias router="ssh -fY papis-router.local xfce4-terminal"
-alias s2ram="(/usr/lib64/libexec/kscreenlocker_greet &) ; sleep 0.5 ; sudo /usr/lib/systemd/systemd-sleep suspend"
 alias zdup="sudo zypper dup --auto-agree-with-licenses --allow-vendor-change --allow-downgrade --allow-name-change"
