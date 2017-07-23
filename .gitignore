@@ -16,6 +16,9 @@
 !\bin
 !\bin/*
 bin/extundelete
+!\.config
+!\.config/plasma-localerc
+!\.config/plasma-locale-settings.sh
 !\.local
 !\.local/share
 !\.local/share/radiotray
