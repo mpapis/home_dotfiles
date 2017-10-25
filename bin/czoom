@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+if
+  [[ -t 0 ]]
+then
+  function _sudo()
+  {
+    sudo "$@"
+  }
+else
+  function _sudo()
+  {
+    xdg-su -c "$*"
+  }
+fi
+
+lscgroup | grep memory:/zoom || {
+  _sudo cgcreate -a $USER -t $USER -g memory:/zoom
+  echo 8G > /sys/fs/cgroup/memory/zoom/memory.limit_in_bytes
+  echo 0  > /sys/fs/cgroup/memory/zoom/memory.swappiness
+}
+
+cgexec -g memory:/zoom zoom
