@@ -10,6 +10,7 @@
 	excludesfile = /home/mpapis/.gitignore_global
 [alias]
 	sync = !sh -c \"git push origin master && git push bitbucket master && git checkout stable && git push origin stable && git push bitbucket stable && git checkout master && git push origin --tags && git push bitbucket --tags\"
+	files = show --name-only
 [projects]
 	root = $HOME/projects
 	depth = 2
