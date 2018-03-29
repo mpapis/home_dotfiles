@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+function current_session()
+{
+  qdbus $KONSOLE_DBUS_SERVICE /Windows/1 currentSession
+}
+
+function set_current_session()
+{
+  qdbus $KONSOLE_DBUS_SERVICE /Windows/1 setCurrentSession $1
+}
+
+function create_tab()
+{
+  qdbus $KONSOLE_DBUS_SERVICE /Windows/1 newSession "" "$PWD"
+}
+
+function tab_run()
+{
+  \typeset session
+  session=$1
+  shift
+
+  qdbus $KONSOLE_DBUS_SERVICE /Sessions/$session runCommand "$*"
+}
+
+orig_session=$(current_session)
+
+cat ${1:-Procfile} | sed -e '/^#/d ; s/^[^:]*: //' | while read command
+do
+  session=$(create_tab)
+  tab_run $session "cd $PWD"
+  echo "Session: $session command: $command"
+  tab_run $session "$command"
+done
+
+set_current_session $orig_session
