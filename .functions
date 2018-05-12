@@ -117,10 +117,12 @@ s2ram()
     fi
   )
   sleep 0.5
+  #/usr/lib/systemd/system-sleep/grub2.sleep
   if [[ -f /lib/systemd/systemd-sleep ]]
   then sudo /lib/systemd/systemd-sleep suspend
   else sudo /usr/lib/systemd/systemd-sleep suspend
   fi
+  echo ""
 }
 
 gri()
@@ -220,7 +222,7 @@ show_git() {
 function pgd {
   show_git && git status --porcelain 2>/dev/null |
   sed 's/^\(.\)\(.\).*$/\1 \2/' | # ?? ... => ? ?
-  awk -v out="$1" '
+  awk -v out="${1:-}" '
 BEGIN  { x=0;y=0; }
 $1!=" " && $1!="?"{ x++; }
 $2!=" "{ y++; }
@@ -238,7 +240,7 @@ function pgb {
   show_git && __git_ps1 "${1:-%s}" 2>/dev/null
 }
 function pgr {
-  show_git && git status 2>/dev/null | awk -v out="$1" '/# Your branch is / { if(out=="") printf $5; else printf out }' #'
+  show_git && git status 2>/dev/null | awk -v out="${1:-}" '/# Your branch is / { if(out=="") printf $5; else printf out }' #'
 }
 function _rvm_curr {
   typeset __rvm_curr
@@ -407,5 +409,5 @@ fixblue()
   #ubuntu
   # bluetoothctl <<<"power off" && sudo hciconfig hci0 up
   #opensuse
-  sudo /usr/sbin/modprobe -r btusb && sleep 1 && sudo /usr/sbin/modprobe btusb
+  sudo /sbin/modprobe -r btusb && sleep 2 && sudo /sbin/modprobe btusb
 }

@@ -17,7 +17,7 @@ if
    [[ -s "${rvm_path:-$HOME/.rvm}/scripts/rvm" ]]
 then
   unset rvm
-  source "${rvm_path:-$HOME/.rvm}/scripts/rvm"
+  source "${rvm_path:-$HOME/.rvm}/scripts/rvm" # Load RVM into a shell session *as a function*
 else
   function rvm()
   {
