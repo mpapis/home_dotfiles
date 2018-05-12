@@ -10,8 +10,8 @@ import time
 # see com.intellij.idea.SocketLock for the server side of this interface
 
 RUN_PATH = u'/home/mpapis/bin/rubymine'
-CONFIG_PATH = u'/home/mpapis/.RubyMine2016.2/config'
-SYSTEM_PATH = u'/home/mpapis/.RubyMine2016.2/system'
+CONFIG_PATH = u'/home/mpapis/.RubyMine2018.1/config'
+SYSTEM_PATH = u'/home/mpapis/.RubyMine2018.1/system'
 
 args = []
 skip_next = False
