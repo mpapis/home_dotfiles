@@ -137,10 +137,6 @@ gpp()
 {
   git pull $@ && git push
 }
-gpf()
-{
-  git push --force-with-lease
-}
 gcaa()
 {
   git add .

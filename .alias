@@ -9,6 +9,8 @@ alias g+="git add"
 alias g-="git rm"
 alias gr="git remote -v"
 alias gc-="git checkout --"
+alias gpf="git push --force-with-lease"
+alias gpu="git push --set-upstream origin HEAD" # the same name on remote
 alias grm="git checkout master && git pull && git checkout - && git rebase master"
 alias open=xdg-open
 alias jb="JRUBY_OPTS=--dev bundle"
