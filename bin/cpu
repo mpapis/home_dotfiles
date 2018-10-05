@@ -110,7 +110,7 @@ function run_gov()
 
 function run_temp()
 {
-  temp="$(cat "/sys/devices/platform/coretemp.0/hwmon/hwmon1/temp1_input")"
+  temp="$(cat /sys/devices/platform/coretemp.0/hwmon/hwmon*/temp1_input)"
   bc <<<"$temp.0/1000.0"
 }
 
