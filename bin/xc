@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+case $1 in
+  (home)
+    xrandr --output eDP-1 --auto --output DP-1 --auto --right-of eDP-1
+    xrandr --output DP-1 --primary
+    ;;
+  (work)
+    xrandr --output eDP-1 --auto --pos 320x1080 --output DP-1-1 --auto --pos 0x0
+    xrandr --output DP-1-1 --primary
+    ;;
+  (*)
+    xrandr --output eDP-1 --auto
+    xrandr --output eDP-1 --primary
+    ;;
+esac
