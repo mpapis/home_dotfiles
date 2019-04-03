@@ -1,18 +1,8 @@
 #!/usr/bin/env bash
 
-function current_session()
-{
-  qdbus $KONSOLE_DBUS_SERVICE /Windows/1 currentSession
-}
-
-function set_current_session()
-{
-  qdbus $KONSOLE_DBUS_SERVICE /Windows/1 setCurrentSession $1
-}
-
 function create_tab()
 {
-  qdbus $KONSOLE_DBUS_SERVICE /Windows/1 newSession "" "$PWD"
+  qdbus $KONSOLE_DBUS_SERVICE $KONSOLE_DBUS_WINDOW newSession "" "$PWD"
 }
 
 function tab_run()
@@ -21,16 +11,33 @@ function tab_run()
   session=$1
   shift
 
-  qdbus $KONSOLE_DBUS_SERVICE /Sessions/$session runCommand "$*"
+  qdbus $KONSOLE_DBUS_SERVICE /Sessions/$session runCommand "$*" > /dev/null
 }
 
-orig_session=$(current_session)
+function tab_title()
+{
+  \typeset session
+  session=$1
+  shift
 
-cat ${1:-Procfile} | sed -e '/^#/d ; s/^[^:]*: //' | while read command
+  qdbus $KONSOLE_DBUS_SERVICE /Sessions/$session setTitle 1 "${PWD##*/} => $*" > /dev/null
+}
+
+function set_current_session()
+{
+  qdbus $KONSOLE_DBUS_SERVICE $KONSOLE_DBUS_WINDOW setCurrentSession $1 > /dev/null
+}
+
+orig_session=$KONSOLE_DBUS_SESSION
+
+cat ${1:-Procfile} | sed -e '/^#/d' | while IFS=": " read name command
 do
   session=$(create_tab)
+  tab_title $session "$name"
+  echo "Session: $session;\tname: $name;\tcommand: $command;"
+  sleep 0.3
   tab_run $session "cd $PWD"
-  echo "Session: $session command: $command"
+  sleep 0.1
   tab_run $session "$command"
 done
 
