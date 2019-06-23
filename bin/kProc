@@ -34,7 +34,7 @@ cat ${1:-Procfile} | sed -e '/^#/d' | while IFS=": " read name command
 do
   session=$(create_tab)
   tab_title $session "$name"
-  echo "Session: $session;\tname: $name;\tcommand: $command;"
+  echo -e "Session: $session;\tname: $name;\tcommand: $command;"
   sleep 0.3
   tab_run $session "cd $PWD"
   sleep 0.1
