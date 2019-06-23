@@ -407,3 +407,22 @@ fixblue()
   #opensuse
   sudo /sbin/modprobe -r btusb && sleep 2 && sudo /sbin/modprobe btusb
 }
+
+path_cleanup()
+{
+  while [[ "$PATH" == *"//"* ]] ; do PATH="${PATH/\/\///}" ; done
+  while [[ "$PATH" == *"/:"* ]] ; do PATH="${PATH/\/:/:}" ; done
+
+  \typeset -a path_split
+  \typeset IFS path_element
+
+  IFS=":" path_split=( $PATH )
+  PATH=""
+
+  for path_element in "${path_split[@]}"
+  do
+    [[ ":$PATH:" == *":${path_element}:"* ]] || PATH="$PATH:$path_element"
+  done
+
+  PATH="${PATH##:}"
+}

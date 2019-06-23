@@ -29,3 +29,5 @@ for script in "${sm_path:-/opt/sm/}/core/sm/shell/project/interactive" "${rvm_pa
 do
   [[ -s "$script" ]] && source "$script" || true
 done
+
+path_cleanup
