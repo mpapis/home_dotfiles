@@ -1,0 +1,6 @@
+[[ -n "${1:-}" ]] || {
+  echo "Usage: $0 video_hash_id"
+  exit 1
+}
+pip install -v --user youtube-dl
+python3.6 -m youtube_dl -x --audio-format mp3 "$1" || exit 1

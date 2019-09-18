@@ -1,0 +1,60 @@
+#!/usr/bin/env ruby
+
+begin
+  require "mini_magick"
+rescue LoadError => e
+  abort <<-MESSAGE
+Missing `mini_magick`, try installing with:
+    sudo zypper in ruby2.5-rubygem-mini_magick
+    # OR
+    gem install mini_magick
+MESSAGE
+end
+
+require 'time'
+
+if ARGV.length < 2
+then abort "Usage: dsort NOWA_NAZWA pliki*"
+end
+
+offset = 1
+name_pattern = ARGV.shift
+count = ARGV.count + offset
+name_formatter = "#{name_pattern}%0#{count.to_s.length}d%s"
+prog_formatter = "\r\e[0K%s: %0#{count.to_s.length}d/#{count}"
+
+images = 
+ARGV.each_with_index.map do |image_name, index|
+  print prog_formatter % ["Reading date", index + offset]
+  $stdout.flush
+
+  image = MiniMagick::Image.new(image_name)
+  exif_date = [
+	image.exif["DateTime"],
+	image.exif["DateTimeDigitized"],
+	image.exif["DateTimeOriginal"]
+  ].compact.min
+
+  image_date = Time.parse(
+    if
+      exif_date
+    then
+      exif_date.gsub(/^(\d{4}):(\d{2}):(\d{2})/, '\1-\2-\3')
+    else
+      [
+        image.data["properties"]["date:create"],
+        image.data["properties"]["date:modify"]
+      ].min
+	end
+  )
+  [image_date, image_name]
+end
+
+images.sort.each_with_index do |(image_date, image_name), index|
+  new_name = name_formatter % [index+offset, File.extname(image_name)]
+  print (prog_formatter % ["Renaming file", index + offset]) + " " + image_name + " => " + new_name
+  $stdout.flush
+  File.rename(image_name,  new_name)
+end
+
+puts "Renamed #{count} files."

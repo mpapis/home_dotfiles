@@ -1,0 +1,4 @@
+ls /etc/zypp/repos.d/* | while read file
+do
+  echo f: "${file}"
+done

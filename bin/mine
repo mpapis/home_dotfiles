@@ -12,6 +12,7 @@ import subprocess
 
 RUN_PATH = u'/home/mpapis/bin/rubymine'
 SETTINGS_PATH = subprocess.check_output("ls -1rvd /home/mpapis/.RubyMine* | head -n 1", shell=True, encoding="utf-8").rstrip()
+print(SETTINGS_PATH)
 CONFIG_PATH = os.path.join(SETTINGS_PATH, u'config') # u'/home/mpapis/.RubyMine2018.2/config'
 SYSTEM_PATH = os.path.join(SETTINGS_PATH, u'system') # u'/home/mpapis/.RubyMine2018.2/system'
 
