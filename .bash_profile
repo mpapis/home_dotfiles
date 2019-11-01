@@ -10,8 +10,10 @@ then
   echo
 fi
 
-__setup_ssh_agent
-[[ -n "${DISPLAY:-}" ]] || __setup_gpg_agent
+if [[ -t 0 ]] && ! ssh-add -l | grep $HOME/.ssh/id_rsa >/dev/null
+then
+  ssh-add
+fi
 
 if
    [[ -s "${rvm_path:-$HOME/.rvm}/scripts/rvm" ]]

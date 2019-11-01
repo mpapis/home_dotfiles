@@ -282,54 +282,6 @@ function edit_variable() {
     echo "there is no function $name"
   fi
 }
-__setup_ssh_agent()
-{
-  typeset agent_file
-  agent_file="$HOME/.ssh/agent-$HOSTNAME"
-
-  # check if already loaded
-  if
-    [[ -n "$SSH_AGENT_PID" ]] && ps -p "$SSH_AGENT_PID" | grep "ssh-agent" >/dev/null
-  then
-    # check if agent file is up to date
-    if
-      ! grep -q SSH_AGENT_PID=$SSH_AGENT_PID $agent_file
-    then
-      # update it if needed
-      env | grep -E 'SSH_AGENT_PID=|SSH_AUTH_SOCK=' | sed 's/^/export /' > $agent_file
-    fi
-    # skip initialization
-    return 0
-  fi
-
-  if [[ -f $agent_file ]]
-  then source $agent_file >/dev/null
-  fi
-
-  if [[ -n "$SSH_AGENT_PID" ]] && ps -p $SSH_AGENT_PID | grep ssh-agent >/dev/null
-  then return 0
-  fi
-
-  ssh-agent > $agent_file
-  chmod 600 $agent_file
-  source $agent_file >/dev/null
-
-  if [[ -t 0 ]] && ! ssh-add -l | grep $HOME/.ssh/id_rsa >/dev/null
-  then
-    ssh-add
-  fi
-}
-__setup_gpg_agent()
-{
-  export GPG_TTY=$(tty)
-
-  # skip if already loaded
-  if ps aux | grep "[g]pg-agent" >/dev/null
-  then return 0
-  fi
-
-  gpg-agent --daemon
-}
 function print_part()
 {
   (( $1 )) || return 0
