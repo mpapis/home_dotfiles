@@ -12,6 +12,8 @@
 !\.gitignore_global
 !\.profile
 !\.vimrc
+!Documents/music/LetsMeditate/download.link
+!Documents/music/LetsMeditate/download.sh
 !\download
 !\bin
 !\bin/*
