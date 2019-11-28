@@ -13,6 +13,9 @@
 shopt -s promptvars dotglob histappend no_empty_cmd_completion cdspell xpg_echo
 
 source ~/.shrc
+if [[ -f ~/.secret.env ]]
+then source ~/.secret.env
+fi
 
 # rails + puma locally
 export BINDING=localhost
