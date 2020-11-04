@@ -6,18 +6,22 @@ less()
   typeset -a params
   if (( $# == 1 )) && [[ -f "$1" ]] && (( $(wc -l < "$1") < ${LINES:-20} ))
   then
-    cat $1
+    cat "$1"
     return 0
   fi
   for param in "$@"
   do
-    case $param in
+    case "$param" in
     (*:*)
       if [[ -f "$param" ]]
       then
         params+=( "$param" )
       else
-        parsed=( ${param//:/ } )
+        IFS_saved="$IFS"
+        IFS=":"
+        parsed=( ${param} )
+        IFS="$IFS_saved"
+        unset IFS_saved
         params+=( "-N" "+j${parsed[1]}" "${parsed[0]}" )
       fi
       ;;
