@@ -27,3 +27,5 @@
 	gpgsign = true
 [gpg]
 	program = gpg2
+[pull]
+	ff = only
